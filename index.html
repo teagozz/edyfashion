@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Edy Fashion | Moda & Estilo</title>
+  <title>Edy Fashion | Vitrine Virtual</title>
 
   <link rel="icon" type="image/jpeg" href="logo.jpg">
 
@@ -48,9 +48,20 @@
     .modal-content-anim { animation: scaleUp 0.3s ease-out forwards; }
     @keyframes scaleUp { from { transform: scale(0.95); opacity: 0; } to { transform: scale(1); opacity: 1; } }
 
-
     .tab-active { background-color: #ea580c; color: white; border-color: #ea580c; }
     .tab-inactive { background-color: white; color: #57534e; border-color: #e7e5e4; }
+
+    /* Animação específica para as categorias (igual a imagem enviada) */
+    .cat-pill {
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .cat-pill:hover {
+      transform: translateY(-3px) scale(1.02);
+      box-shadow: 0 10px 15px -3px rgba(234, 88, 12, 0.15);
+      border-color: #ea580c;
+    }
+
+    input[readonly] { background-color: #f3f4f6; cursor: not-allowed; }
   </style>
 </head>
 <body class="antialiased min-h-screen flex flex-col font-sans selection:bg-brand selection:text-white">
@@ -60,13 +71,33 @@
     <a href="#" class="text-2xl font-serif font-bold tracking-tight text-brand hover:opacity-80 transition-opacity">
       Edy Fashion
     </a>
-    <nav class="hidden md:flex gap-8 text-sm font-medium text-txt-muted">
-      <a href="#inicio" class="hover:text-brand transition-colors">Início</a>
-      <a href="#colecao" class="hover:text-brand transition-colors">Coleção</a>
-      <a href="#produtos" class="hover:text-brand transition-colors">Produtos</a>
-      <a href="#diferenciais" class="hover:text-brand transition-colors">Sobre</a>
-      <a href="#contato" class="hover:text-brand transition-colors">Contato</a>
-    </nav>
+
+    <div class="flex items-center gap-6">
+      <nav class="hidden md:flex gap-6 text-sm font-medium text-txt-muted mr-2">
+        <a href="#inicio" class="hover:text-brand transition-colors">Início</a>
+        <a href="#colecao" class="hover:text-brand transition-colors">Coleção</a>
+        <a href="#produtos" class="hover:text-brand transition-colors">Produtos</a>
+        <a href="#contato" class="hover:text-brand transition-colors">Contato</a>
+      </nav>
+
+      <div id="auth-display" onclick="handleProfileClick()" class="hidden md:flex flex-col items-start leading-tight cursor-pointer hover:opacity-80 transition-opacity border-l border-border-dim pl-6">
+        <span class="text-[10px] text-txt-muted">Olá, <span id="header-username">Visitante</span></span>
+        <span class="text-xs font-bold text-txt-main">Entre ou Cadastre-se</span>
+      </div>
+
+      <button onclick="checkAuthAndAction('cart')" class="relative p-2 text-txt-main hover:text-brand transition-colors group">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+        </svg>
+        <span id="cart-count" class="absolute top-0 right-0 bg-brand text-white text-[10px] font-bold h-4 w-4 rounded-full flex items-center justify-center transform scale-0 transition-transform duration-200">0</span>
+      </button>
+
+      <button onclick="handleProfileClick()" class="md:hidden text-txt-main">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+        </svg>
+      </button>
+    </div>
   </div>
 </header>
 
@@ -96,9 +127,11 @@
         </h1>
         <h2 class="text-xl md:text-2xl text-brand mb-8 font-medium" id="hero-role"></h2>
         <div class="text-lg text-txt-muted mb-10 leading-relaxed max-w-2xl" id="hero-bio"></div>
+
         <div>
-          <h3 class="text-xs font-bold uppercase tracking-widest text-txt-muted mb-4 pl-1">Categorias</h3>
-          <div class="flex flex-wrap gap-2" id="categories-list"></div>
+          <h3 class="text-xs font-bold uppercase tracking-widest text-txt-muted mb-4 pl-1">CATEGORIAS</h3>
+          <div class="flex flex-wrap gap-4" id="categories-list">
+          </div>
         </div>
       </div>
     </section>
@@ -110,7 +143,8 @@
         <h2 class="text-3xl font-serif font-bold text-txt-main tracking-tight">Destaques</h2>
         <span class="text-xs font-bold text-brand uppercase tracking-wider hidden sm:inline-block">/ Novidades da semana</span>
       </div>
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="products-grid"></div>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="products-grid">
+      </div>
     </section>
 
     <section id="produtos" class="section-scroll">
@@ -124,6 +158,7 @@
       <div class="grid grid-cols-1 md:grid-cols-3 gap-6 opacity-0 translate-y-4 transition-all duration-500 ease-out" id="catalog-grid">
       </div>
     </section>
+
     <section id="diferenciais" class="section-scroll">
       <div class="flex items-baseline justify-between mb-12 px-2">
         <h2 class="text-3xl font-serif font-bold text-txt-main tracking-tight">Por que escolher a Edy?</h2>
@@ -143,6 +178,41 @@
 
   </div>
 </main>
+
+<section class="bg-gray-100 border-t border-border-dim py-12">
+  <div class="max-w-5xl mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-12 text-sm">
+
+    <div>
+      <h5 class="font-serif font-bold text-txt-main mb-4 text-base">Edy Fashion</h5>
+      <p class="text-txt-muted mb-4">CNPJ: 08.616.647/0001-54</p>
+      <p class="text-txt-muted">Avenida José Ferreira Freire Murta, 168, Centro<br>Coronel Murta- MG</p>
+    </div>
+
+    <div class="flex flex-col gap-2">
+      <h5 class="font-bold text-txt-main mb-2 uppercase tracking-wider text-xs">Dúvidas e Reclamações</h5>
+<!--      <button onclick="openLegalModal('trocas')" class="text-left text-txt-muted hover:text-brand transition-colors">Trocas e Devoluções</button>-->
+<!--      <button onclick="openLegalModal('entregas')" class="text-left text-txt-muted hover:text-brand transition-colors">Prazos e Envios</button>-->
+      <a href="https://wa.me/553384539635" target="_blank" class="text-txt-muted hover:text-brand transition-colors">Falar no WhatsApp</a>
+    </div>
+
+    <div class="flex flex-col gap-2">
+      <h5 class="font-bold text-txt-main mb-2 uppercase tracking-wider text-xs">Jurídico & Privacidade</h5>
+      <button onclick="openLegalModal('privacidade')" class="text-left text-txt-muted hover:text-brand transition-colors flex items-center gap-1">
+        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+        Política de Privacidade (LGPD)
+      </button>
+      <button onclick="openLegalModal('termos')" class="text-left text-txt-muted hover:text-brand transition-colors">Termos de Uso</button>
+      <a href="https://www.gov.br/anpd/pt-br" target="_blank" class="text-txt-muted hover:text-brand transition-colors flex items-center gap-1">
+        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+        Portal Oficial da LGPD
+      </a>
+      <div class="mt-4 pt-4 border-t border-gray-200">
+        <p class="text-[10px] text-gray-400">Em conformidade com a Lei nº 13.709/2018 (Lei Geral de Proteção de Dados Pessoais).</p>
+      </div>
+    </div>
+
+  </div>
+</section>
 
 <footer class="border-t border-border-dim py-12 mt-auto bg-white">
   <div class="max-w-5xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-6">
@@ -166,347 +236,759 @@
   </div>
 </footer>
 
-<div id="product-modal" class="fixed inset-0 z-[100] hidden items-end sm:items-center justify-center p-0 sm:p-4">
-  <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" onclick="closeModal()"></div>
+<div id="legal-modal" class="fixed inset-0 z-[130] hidden items-center justify-center p-4">
+  <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" onclick="closeLegalModal()"></div>
+  <div class="bg-white rounded-2xl w-full max-w-2xl relative z-10 shadow-2xl modal-content-anim flex flex-col max-h-[85vh] overflow-hidden">
+    <div class="p-6 border-b border-gray-100 flex justify-between items-center bg-gray-50">
+      <h3 id="legal-title" class="text-xl font-serif font-bold text-txt-main">Política</h3>
+      <button onclick="closeLegalModal()" class="text-gray-400 hover:text-black p-1">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+      </button>
+    </div>
+    <div class="p-8 overflow-y-auto text-sm leading-relaxed text-gray-600" id="legal-content"></div>
+    <div class="p-4 border-t border-gray-100 bg-gray-50 text-right">
+      <button onclick="closeLegalModal()" class="px-6 py-2 bg-brand text-white font-bold rounded-lg hover:bg-brand-dark transition-colors text-sm">Entendi</button>
+    </div>
+  </div>
+</div>
 
-  <div class="bg-white rounded-t-3xl sm:rounded-3xl max-w-2xl w-full relative z-10 shadow-2xl modal-content-anim flex flex-col md:flex-row max-h-[90vh] overflow-y-auto md:overflow-hidden">
-
-    <div id="modal-image-container" class="w-full md:w-1/2 bg-gray-100 flex items-center justify-center h-48 md:h-auto min-h-[12rem] md:min-h-[300px] shrink-0 p-0 overflow-hidden relative">
-      <span class="text-6xl">👗</span>
+<div id="auth-modal" class="fixed inset-0 z-[120] hidden items-center justify-center p-4">
+  <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" onclick="closeAuthModal()"></div>
+  <div class="bg-white rounded-2xl w-full max-w-md relative z-10 shadow-2xl modal-content-anim overflow-hidden max-h-[90vh] overflow-y-auto">
+    <div class="flex border-b border-gray-100">
+      <button onclick="switchAuthTab('login')" id="tab-login" class="flex-1 py-4 text-sm font-bold text-center border-b-2 border-brand text-brand bg-gray-50">Entrar</button>
+      <button onclick="switchAuthTab('register')" id="tab-register" class="flex-1 py-4 text-sm font-bold text-center border-b-2 border-transparent text-gray-500 hover:text-brand">Criar Conta</button>
     </div>
 
+    <div class="p-8">
+      <div id="form-login">
+        <h3 class="text-2xl font-serif font-bold mb-6 text-txt-main">Bem-vindo de volta</h3>
+        <input type="email" id="login-email" placeholder="Seu email" class="w-full mb-4 p-3 rounded-lg border border-gray-300 focus:outline-none focus:border-brand">
+        <input type="password" id="login-pass" placeholder="Sua senha" class="w-full mb-6 p-3 rounded-lg border border-gray-300 focus:outline-none focus:border-brand">
+        <button onclick="performLogin()" class="w-full py-3 bg-brand text-white font-bold rounded-xl hover:bg-brand-dark transition-colors">Entrar</button>
+      </div>
+
+      <div id="form-register" class="hidden">
+        <div class="mb-4 flex items-center justify-between text-xs font-bold text-gray-400 uppercase tracking-widest">
+          <span id="step-indicator">Etapa 1 de 3</span>
+          <div class="flex gap-1">
+            <div id="dot-1" class="w-2 h-2 rounded-full bg-brand"></div>
+            <div id="dot-2" class="w-2 h-2 rounded-full bg-gray-200"></div>
+            <div id="dot-3" class="w-2 h-2 rounded-full bg-gray-200"></div>
+          </div>
+        </div>
+
+        <div id="reg-step-1">
+          <h3 class="text-xl font-serif font-bold mb-4 text-txt-main">Dados Pessoais</h3>
+          <div class="grid grid-cols-2 gap-3 mb-3">
+            <input type="text" id="reg-name" placeholder="Nome" class="w-full p-3 rounded-lg border border-gray-300 focus:outline-none focus:border-brand">
+            <input type="text" id="reg-lastname" placeholder="Sobrenome" class="w-full p-3 rounded-lg border border-gray-300 focus:outline-none focus:border-brand">
+          </div>
+          <input type="text" id="reg-cpf" placeholder="CPF (000.000.000-00)" class="w-full mb-3 p-3 rounded-lg border border-gray-300 focus:outline-none focus:border-brand" maxlength="14" oninput="maskCPF(this)">
+
+          <div class="mb-3">
+            <label class="text-[10px] text-gray-500 font-bold uppercase ml-1">Data de Nascimento</label>
+            <input type="date" id="reg-dob" class="w-full p-3 rounded-lg border border-gray-300 focus:outline-none focus:border-brand">
+          </div>
+
+          <input type="tel" id="reg-phone" placeholder="Telefone" class="w-full mb-4 p-3 rounded-lg border border-gray-300 focus:outline-none focus:border-brand">
+          <button onclick="validateStep1()" class="w-full py-3 bg-brand text-white font-bold rounded-xl hover:bg-brand-dark transition-colors">Próxima Etapa</button>
+        </div>
+
+        <div id="reg-step-2" class="hidden">
+          <h3 class="text-xl font-serif font-bold mb-4 text-txt-main">Credenciais</h3>
+          <input type="email" id="reg-email" placeholder="Email" class="w-full mb-3 p-3 rounded-lg border border-gray-300 focus:outline-none focus:border-brand">
+          <input type="password" id="reg-pass" placeholder="Senha" class="w-full mb-3 p-3 rounded-lg border border-gray-300 focus:outline-none focus:border-brand">
+          <input type="password" id="reg-pass-confirm" placeholder="Confirme a Senha" class="w-full mb-4 p-3 rounded-lg border border-gray-300 focus:outline-none focus:border-brand">
+          <div class="flex gap-2">
+            <button onclick="prevStep(1)" class="w-1/3 py-3 border border-gray-300 font-bold rounded-xl hover:bg-gray-50">Voltar</button>
+            <button onclick="validateStep2()" class="w-2/3 py-3 bg-brand text-white font-bold rounded-xl hover:bg-brand-dark transition-colors">Próxima Etapa</button>
+          </div>
+        </div>
+
+        <div id="reg-step-3" class="hidden">
+          <h3 class="text-xl font-serif font-bold mb-4 text-txt-main">Endereço de Entrega</h3>
+          <div class="flex gap-2 mb-3">
+            <input type="text" id="reg-cep" placeholder="CEP (00000-000)" class="w-2/3 p-3 rounded-lg border border-gray-300 focus:outline-none focus:border-brand" maxlength="9" onblur="fetchAddressByCEP(this.value)">
+            <button type="button" class="w-1/3 text-xs bg-gray-100 rounded-lg font-bold text-gray-500">Buscar</button>
+          </div>
+          <input type="text" id="reg-street" placeholder="Logradouro" readonly class="w-full mb-3 p-3 rounded-lg border border-gray-300 focus:outline-none">
+          <div class="grid grid-cols-2 gap-3 mb-3">
+            <input type="text" id="reg-number" placeholder="Número" class="w-full p-3 rounded-lg border border-gray-300 focus:outline-none focus:border-brand">
+            <input type="text" id="reg-comp" placeholder="Complemento (Opc)" class="w-full p-3 rounded-lg border border-gray-300 focus:outline-none focus:border-brand">
+          </div>
+          <div class="grid grid-cols-2 gap-3 mb-4">
+            <input type="text" id="reg-district" placeholder="Bairro" readonly class="w-full p-3 rounded-lg border border-gray-300">
+            <input type="text" id="reg-city" placeholder="Cidade/UF" readonly class="w-full p-3 rounded-lg border border-gray-300">
+          </div>
+
+          <div class="flex gap-2">
+            <button onclick="prevStep(2)" class="w-1/3 py-3 border border-gray-300 font-bold rounded-xl hover:bg-gray-50">Voltar</button>
+            <button onclick="performRegister()" class="w-2/3 py-3 bg-green-600 text-white font-bold rounded-xl hover:bg-green-700 transition-colors">Finalizar Cadastro</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+    <button onclick="closeAuthModal()" class="absolute top-4 right-4 text-gray-400 hover:text-black">
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+    </button>
+  </div>
+</div>
+
+<div id="profile-modal" class="fixed inset-0 z-[120] hidden items-center justify-center p-4">
+  <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" onclick="closeProfileModal()"></div>
+  <div class="bg-white rounded-2xl w-full max-w-2xl relative z-10 shadow-2xl modal-content-anim overflow-hidden max-h-[90vh] flex flex-col">
+    <div class="bg-brand p-6 text-white flex justify-between items-center">
+      <div>
+        <h3 class="text-2xl font-serif font-bold" id="profile-name-display">Nome do Usuário</h3>
+        <p class="text-white/80 text-sm" id="profile-email-display">email@usuario.com</p>
+      </div>
+      <button onclick="performLogout()" class="bg-white/20 hover:bg-white/30 px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-wider backdrop-blur-sm transition-colors mr-4">
+        Sair
+      </button>
+    </div>
+
+    <div class="flex border-b border-gray-100">
+      <button onclick="switchProfileTab('orders')" id="tab-p-orders" class="flex-1 py-4 text-sm font-bold text-center border-b-2 border-brand text-brand bg-gray-50">Meus Pedidos</button>
+      <button onclick="switchProfileTab('data')" id="tab-p-data" class="flex-1 py-4 text-sm font-bold text-center border-b-2 border-transparent text-gray-500 hover:text-brand">Meus Dados</button>
+    </div>
+
+    <div class="p-6 overflow-y-auto flex-grow">
+      <div id="profile-orders" class="space-y-4"></div>
+      <div id="profile-data" class="hidden space-y-4">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+          <div class="p-4 bg-gray-50 rounded-lg"><span class="block text-gray-400 text-xs font-bold uppercase">CPF</span><span id="data-cpf" class="font-medium text-txt-main"></span></div>
+          <div class="p-4 bg-gray-50 rounded-lg"><span class="block text-gray-400 text-xs font-bold uppercase">Telefone</span><span id="data-phone" class="font-medium text-txt-main"></span></div>
+          <div class="p-4 bg-gray-50 rounded-lg md:col-span-2"><span class="block text-gray-400 text-xs font-bold uppercase">Endereço</span><span id="data-address" class="font-medium text-txt-main"></span></div>
+        </div>
+      </div>
+    </div>
+
+    <button onclick="closeProfileModal()" class="absolute top-4 right-4 text-white/80 hover:text-white">
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+    </button>
+  </div>
+</div>
+
+<div id="product-modal" class="fixed inset-0 z-[100] hidden items-end sm:items-center justify-center p-0 sm:p-4">
+  <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" onclick="closeModal()"></div>
+  <div class="bg-white rounded-t-3xl sm:rounded-3xl max-w-2xl w-full relative z-10 shadow-2xl modal-content-anim flex flex-col md:flex-row max-h-[90vh] overflow-y-auto md:overflow-hidden">
+    <div id="modal-image-container" class="w-full md:w-1/2 bg-gray-100 flex items-center justify-center h-48 md:h-auto min-h-[12rem] md:min-h-[300px] shrink-0 p-0 overflow-hidden relative"><span class="text-6xl">👗</span></div>
     <div class="w-full md:w-1/2 p-6 md:p-8 flex flex-col">
       <button onclick="closeModal()" class="absolute top-4 right-4 text-gray-500 hover:text-black z-50 bg-white/80 backdrop-blur rounded-full p-2 shadow-sm">
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0
-         24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
       </button>
-
-      <div class="flex justify-between items-start mb-2 mt-2 md:mt-0 pr-8">
-        <h3 id="modal-title" class="text-2xl font-serif font-bold text-txt-main leading-tight"></h3>
-      </div>
+      <div class="flex justify-between items-start mb-2 mt-2 md:mt-0 pr-8"><h3 id="modal-title" class="text-2xl font-serif font-bold text-txt-main leading-tight"></h3></div>
       <span id="modal-price" class="text-xl font-bold text-brand mb-3 block"></span>
       <p id="modal-desc" class="text-txt-muted text-sm leading-relaxed mb-6 flex-grow"></p>
       <div id="modal-tags" class="flex gap-2 mb-6 flex-wrap"></div>
-      <a id="modal-action" href="#" target="_blank" class="w-full py-3 bg-brand text-white font-bold
-      text-center rounded-xl hover:bg-brand-dark transition-colors flex items-center justify-center gap-2 mt-auto shadow-lg shadow-brand/20">
-        <span>Comprar no WhatsApp</span>
-      </a>
+      <div class="flex flex-col gap-3 mt-auto">
+        <a id="modal-action-whatsapp" href="#" target="_blank" class="w-full py-3 bg-green-500 text-white font-bold text-center rounded-xl hover:bg-green-600 transition-colors flex items-center justify-center gap-2 shadow-lg shadow-green-500/20">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+          <span>Falar no WhatsApp</span>
+        </a>
+        <button id="add-to-cart-btn" onclick="" class="w-full py-3 bg-brand text-white font-bold text-center rounded-xl hover:bg-brand-dark transition-colors flex items-center justify-center gap-2 shadow-lg shadow-brand/20">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
+          <span>Adicionar ao Carrinho</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="checkout-modal" class="fixed inset-0 z-[110] hidden items-end sm:items-center justify-center p-0 sm:p-4">
+  <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" onclick="closeCheckoutModal()"></div>
+
+  <div class="bg-white rounded-t-3xl sm:rounded-3xl max-w-3xl w-full relative z-10 shadow-2xl modal-content-anim flex flex-col max-h-[95vh] overflow-hidden">
+    <div class="px-6 py-4 border-b border-border-dim flex justify-between items-center bg-gray-50">
+      <h3 class="text-xl font-serif font-bold text-txt-main">Meu Carrinho</h3>
+      <button onclick="closeCheckoutModal()" class="text-gray-400 hover:text-black">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+      </button>
+    </div>
+
+    <div class="overflow-y-auto flex-grow p-6">
+      <div id="cart-items-list" class="space-y-4">
+        <div class="text-center text-gray-400 py-10">Seu carrinho está vazio.</div>
+      </div>
+      <div class="pt-4 border-t border-border-dim flex justify-between items-center mt-4">
+        <span class="font-bold text-lg">Total Estimado:</span>
+        <span id="cart-total-display" class="font-bold text-xl text-brand">R$ 0,00</span>
+      </div>
+
+      <button onclick="finalizePurchaseWhatsApp()" id="btn-to-whatsapp" class="w-full py-3 bg-green-500 text-white font-bold rounded-xl hover:bg-green-600 transition-all mt-6 flex justify-center items-center gap-2 shadow-lg shadow-green-500/20 disabled:opacity-50 disabled:cursor-not-allowed">
+        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+        <span>Finalizar no WhatsApp</span>
+      </button>
+      <p class="text-xs text-center text-gray-400 mt-2">Você será redirecionado para falar com um atendente.</p>
     </div>
   </div>
 </div>
 
 <script>
+  let cart = [];
+  let currentUser = null;
+  let simulatedOrders = [];
+  const PHONE_NUMBER = "553384539635"; // Seu número configurado
 
   const storeData = {
     nome: "Edy Fashion",
     slogan: "Inovando a cada estação!",
-    localizacao: "Enviamos para todo o Brasil",
-
+    localizacao: "Av. José Ferreira Freire Murta, 168 - <br>39635-000, Coronel Murta - MG",
     fotoUrl: "logo.jpg",
-
-    descricao: "Na Edy Fashion, acreditamos que a moda é uma forma de expressão. <br><br>" +
-      "Trabalhamos com peças selecionadas que unem conforto, tendência e elegância.",
-
-    categorias: [
-      "Roupas e Calçados em Geral", "Acessórios e Tendências", "Masculino, Feminino e Infantojuvenil", "Novidades"
-    ],
-
+    descricao: "Na Edy Fashion, acreditamos que a moda é uma forma de expressão. <br><br>Trabalhamos com peças selecionadas que unem conforto, tendência e elegância.",
+    categorias: ["Roupas e Calçados em Geral", "Acessórios e Tendências", "Masculino, Feminino e Infantojuvenil", "Novidades"],
     produtos: [
-      {
-        id: 1,
-        nome: "Tamanco Via Gata",
-        preco: "R$ 149,90",
-        imagem: "p1.jpg",
-        descricao: "Elegância e leveza, para o dia a dia ou eventos formais, conforto garantido!",
-        tags: ["Dia a Dia", "Eventos "],
-        linkCompra: "https://wa.me/553384539635?text=Olá, tenho interesse no Tamanco Via Gata!"
-      },
-      {
-        id: 2,
-        nome: "Blusa Marca X",
-        preco: "R$ 89,90",
-        imagem: "p2.jpg",
-        descricao: "Perfeita para o trabalho ou eventos casuais. Corte moderno.",
-        tags: ["Social", "Trabalho"],
-        linkCompra: "https://wa.me/553384539635?text=Olá, gostei da blusa x!"
-      },
-      {
-        id: 3,
-        nome: "Camisas Alfaiataria",
-        preco: "R$ 199,00",
-        imagem: "p3.jpg",
-        descricao: "Sofisticação em cada detalhe. Disponível em várias cores.",
-        tags: ["Luxo", "Noite"],
-        linkCompra: "https://wa.me/553384539635?text=Olá, gostei da camisa Alfaiataria!"
-      },
-      {
-        id: 4,
-        nome: "Vestido Floral FAKINI",
-        preco: "R$ 149,90",
-        imagem: "p4.jpg",
-        descricao: "Graciosidade para sua menina! Tecido leve e confortável.",
-        tags: ["Leveza", "Casual"],
-        linkCompra: "https://wa.me/553384539635?text=Olá, gostei do vestido infantil da Fakini!"
-      },
-      {
-        id: 5,
-        nome: "Bolsa FEM Classe Couro",
-        preco: "R$ 289,90",
-        imagem: "p5.jpg",
-        descricao: "Leve contigo por onde for, infinitas possibilidades de combinações!",
-        tags: ["Social", "Trabalho"],
-        linkCompra: "https://wa.me/553384539635?text=Olá, tenho interesse na bolsa classe couro!"
-      }
+      { id: 1, nome: "Tamanco Via Gata", preco: "R$ 149,90", imagem: "p1.jpg",
+        descricao: "Elegância e leveza.", tags: ["Dia a Dia"], linkCompra: "" },
+      { id: 2, nome: "Blusa Marca X", preco: "R$ 89,90", imagem: "p2.jpg",
+        descricao: "Perfeita para o trabalho.", tags: ["Trabalho"], linkCompra: "" },
+      { id: 3, nome: "Camisas Alfaiataria", preco: "R$ 199,00", imagem: "p3.jpg",
+        descricao: "Sofisticação em cada detalhe.", tags: ["Luxo"], linkCompra: "" },
+      { id: 4, nome: "Vestido Floral", preco: "R$ 149,90", imagem: "p4.jpg",
+        descricao: "Graciosidade para sua menina!", tags: ["Infantil"], linkCompra: "" },
+      { id: 5, nome: "Bolsa Couro", preco: "R$ 289,90", imagem: "p5.jpg",
+        descricao: "Leve contigo por onde for.", tags: ["Acessórios"], linkCompra: "" }
     ],
-
     diferenciais: [
-      { titulo: "Atendimento Personalizado", subtitulo: "Consultoria de moda", detalhe: "Ajudamos você a escolher o look perfeito, seja presencialmente ou pelo nosso atendimento online!" },
-      { titulo: "Qualidade Premium", subtitulo: "Curadoria Exclusiva", detalhe: "Peças selecionadas com material de alta qualidade e conforto." },
-      { titulo: "Compra Segura", subtitulo: "Facilidade no Pagamento", detalhe: "Aceitamos diversas formas de pagamento e garantimos a segurança da sua compra." }
+      { titulo: "Atendimento Personalizado", subtitulo: "Consultoria de moda", detalhe: "Ajudamos você a escolher o look perfeito." },
+      { titulo: "Qualidade Premium", subtitulo: "Curadoria Exclusiva", detalhe: "Peças selecionadas com material de alta qualidade." },
+      { titulo: "Compra Segura", subtitulo: "Proteção de Dados", detalhe: "Seguimos rigorosamente a LGPD para sua segurança." }
     ],
-
-    contato: {
-      instagram: "https://www.instagram.com/edyfashion__/",
-      whatsapp: "https://wa.me/553384539635",
-    }
+    contato: { instagram: "https://www.instagram.com/edyfashion__/", whatsapp: "https://wa.me/553384539635" }
   };
 
-  const catalogCategories = {
-    "Masculino": [],
-    "Feminino": [],
-    "Acessórios": [],
-    "Infantil Feminino": [],
-    "Infantil Masculino": []
+  const catalogCategories = { "Masculino": [], "Feminino": [], "Acessórios": [], "Infantil Feminino": [], "Infantil Masculino": [] };
+
+  const legalTexts = {
+    // trocas: `
+    //   <h4 class="font-bold text-gray-800 mb-2">Política de Trocas e Devoluções</h4>
+    //   <p class="mb-3">Na Edy Fashion, respeitamos o Código de Defesa do Consumidor. Confira as regras:</p>
+    //   <ul class="list-disc pl-5 space-y-2 mb-4">
+    //     <li><strong>Direito de Arrependimento:</strong> Conforme o Art. 49 do CDC, o cliente tem até 7 (sete) dias corridos
+    //     após o recebimento do produto para solicitar a devolução por arrependimento, sem necessidade de justificativa. O produto deve estar sem uso e com etiquetas.</li>
+    //     <li><strong>Troca por Defeito:</strong> Caso a peça apresente defeito de fabricação, o prazo para solicitação é de até 30 dias, o processo
+    //     irá depender do fornecedor do produto defeituoso.</li>
+    //     <li><strong>Troca por Tamanho/Cor:</strong> Realizamos a troca mediante disponibilidade de estoque.
+    //     A troca deve ser feita o mais rápido possível.</li>
+    //   </ul>
+    //   <p>Para iniciar um processo, entre em contato via WhatsApp informando o número do pedido.</p>
+    // `,
+    // entregas: `
+    //   <h4 class="font-bold text-gray-800 mb-2">Prazos e Envios</h4>
+    //   <p class="mb-3">Nosso compromisso é postar seu pedido o mais rápido possível.</p>
+    //   <ul class="list-disc pl-5 space-y-2 mb-4">
+    //     <li><strong>Postagem Ágil:</strong> Pedidos aprovados são postados no mesmo dia ou, no máximo, no próximo dia útil.</li>
+    //     <li><strong>Transportadoras:</strong> Utilizamos os serviços dos Correios e transportadoras parceiras. O prazo final de entrega depende exclusivamente da logística dessas empresas e da sua região (CEP).</li>
+    //     <li><strong>Rastreio:</strong> Assim que postado, você receberá o código para acompanhar sua encomenda.</li>
+    //   </ul>
+    //   <p class="text-xs text-gray-400">Nota: Não nos responsabilizamos por atrasos decorrentes de greves, fenômenos naturais ou endereços cadastrados incorretamente.</p>
+    // `,
+    privacidade: `
+      <h4 class="font-bold text-gray-800 mb-2">Política de Privacidade (LGPD)</h4>
+      <p class="mb-3">A Edy Fashion leva sua privacidade a sério. Em conformidade com a Lei Geral de Proteção de Dados (Lei nº 13.709/2018), informamos que:</p>
+      <ul class="list-disc pl-5 space-y-2 mb-4">
+        <li><strong>Coleta de Dados:</strong> Coletamos apenas os dados estritamente necessários (Nome, CPF, Telefone e Endereço) para processar seu pedido, emitir nota fiscal e realizar a entrega.</li>
+        <li><strong>Uso das Informações:</strong> Seus dados são utilizados exclusivamente para comunicação sobre o pedido e fins logísticos. Não vendemos nem compartilhamos seus dados com terceiros para fins de marketing não autorizado.</li>
+        <li><strong>Segurança:</strong> Adotamos medidas técnicas para proteger seus dados contra acessos não autorizados.</li>
+        <li><strong>Seus Direitos:</strong> Você pode, a qualquer momento, solicitar a visualização ou exclusão dos seus dados de nossa base, bastando entrar em contato conosco.</li>
+      </ul>
+    `,
+    termos: `
+      <h4 class="font-bold text-gray-800 mb-2">Termos de Uso</h4>
+      <p class="mb-3">Ao utilizar o site da Edy Fashion, você concorda com os seguintes termos:</p>
+      <ul class="list-disc pl-5 space-y-2 mb-4">
+        <li><strong>Produtos:</strong> As imagens dos produtos são ilustrativas. Podem ocorrer pequenas variações de cor dependendo do monitor.</li>
+        <li><strong>Disponibilidade:</strong> A inclusão de um produto no carrinho não garante sua reserva. A compra só é efetivada após a confirmação do pagamento.</li>
+        <li><strong>Preços:</strong> Reservamo-nos o direito de alterar preços e condições de pagamento sem aviso prévio. Pedidos já finalizados não sofrerão alterações.</li>
+        <li><strong>Propriedade Intelectual:</strong> Todo o conteúdo deste site (fotos, textos, logotipos) é de propriedade da Edy Fashion.</li>
+      </ul>
+    `
   };
 
-  let currentId = 100;
+  function parsePrice(priceStr) { return parseFloat(priceStr.replace("R$", "").replace(".", "").replace(",", ".").trim()); }
+  function formatPrice(value) { return value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }); }
 
-  function generateCatalogData() {
-    const defaultImg = "logo.jpg";
-
-    Object.keys(catalogCategories).forEach(cat => {
-      for(let i = 1; i <= 3; i++) {
-        currentId++;
-        const prod = {
-          id: currentId,
-          nome: `Produto ${cat} ${i}`,
-          preco: "R$ 99,90",
-          imagem: defaultImg,
-          descricao: `Item exclusivo da coleção ${cat}. Conforto e estilo.`,
-          tags: [cat, "Oferta"],
-          linkCompra: `https://wa.me/553384539635?text=Olá, tenho interesse no Produto ${cat} ${i}!`
-        };
-        catalogCategories[cat].push(prod);
-
-        storeData.produtos.push(prod);
-      }
-    });
+  // Funções Utilitárias (CPF, CEP, etc) mantidas para o cadastro
+  function isValidCPF(cpf) {
+    cpf = cpf.replace(/[^\d]+/g, '');
+    if (cpf.length !== 11 || /^(\d)\1+$/.test(cpf)) return false;
+    let add = 0;
+    for (let i = 0; i < 9; i++) add += parseInt(cpf.charAt(i)) * (10 - i);
+    let rev = 11 - (add % 11);
+    if (rev === 10 || rev === 11) rev = 0;
+    if (rev !== parseInt(cpf.charAt(9))) return false;
+    add = 0;
+    for (let i = 0; i < 10; i++) add += parseInt(cpf.charAt(i)) * (11 - i);
+    rev = 11 - (add % 11);
+    if (rev === 10 || rev === 11) rev = 0;
+    if (rev !== parseInt(cpf.charAt(10))) return false;
+    return true;
   }
 
-  function renderTabs() {
-    const tabContainer = document.getElementById('tab-container');
-    const categories = Object.keys(catalogCategories);
-
-    categories.forEach((cat, index) => {
-      const btn = document.createElement('button');
-      const initialClass = index === 0 ? 'tab-active' : 'tab-inactive';
-
-      btn.className = `px-5 py-2 rounded-full text-sm font-bold border transition-all duration-300 hover:shadow-md ${initialClass}`;
-      btn.textContent = cat;
-      btn.onclick = () => switchTab(cat, btn);
-      tabContainer.appendChild(btn);
-    });
-
-
-    renderCatalogGrid(categories[0]);
+  function maskCPF(input) {
+    let v = input.value.replace(/\D/g,"");
+    v = v.replace(/(\d{3})(\d)/,"$1.$2");
+    v = v.replace(/(\d{3})(\d)/,"$1.$2");
+    v = v.replace(/(\d{3})(\d{1,2})$/,"$1-$2");
+    input.value = v;
   }
 
-  function switchTab(selectedCat, clickedBtn) {
-    const buttons = document.getElementById('tab-container').children;
-    for (let btn of buttons) {
-      btn.classList.remove('tab-active');
-      btn.classList.add('tab-inactive');
-    }
-    clickedBtn.classList.remove('tab-inactive');
-    clickedBtn.classList.add('tab-active');
-
-
-    renderCatalogGrid(selectedCat);
+  function isOver15(dob) {
+    const today = new Date();
+    const birthDate = new Date(dob);
+    let age = today.getFullYear() - birthDate.getFullYear();
+    const m = today.getMonth() - birthDate.getMonth();
+    if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) age--;
+    return age >= 15;
   }
 
-  function renderCatalogGrid(category) {
-    const grid = document.getElementById('catalog-grid');
-
-
-    grid.classList.remove('opacity-100', 'translate-y-0');
-    grid.classList.add('opacity-0', 'translate-y-4');
-
-    setTimeout(() => {
-      grid.innerHTML = '';
-      const items = catalogCategories[category];
-
-      items.forEach(prod => {
-        const card = document.createElement('div');
-        card.className = "bg-white p-4 rounded-2xl border border-border-dim hover:shadow-lg transition-all cursor-pointer group flex flex-col";
-        card.onclick = () => openModal(prod.id);
-
-        card.innerHTML = `
-                <div class="h-40 bg-gray-50 rounded-xl overflow-hidden mb-3 relative">
-                    <img src="${prod.imagem}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
-                    <div class="absolute bottom-2 right-2 bg-white/90 backdrop-blur px-2 py-1 rounded text-xs font-bold text-brand shadow-sm">
-                        ${prod.preco}
-                    </div>
-                </div>
-                <h4 class="font-bold text-txt-main text-sm mb-1">${prod.nome}</h4>
-                <p class="text-xs text-txt-muted line-clamp-2">${prod.descricao}</p>
-            `;
-        grid.appendChild(card);
-      });
-
-
-      grid.classList.remove('opacity-0', 'translate-y-4');
-      grid.classList.add('opacity-100', 'translate-y-0');
-    }, 300);
+  function fetchAddressByCEP(cep) {
+    const cleanCep = cep.replace(/\D/g, '');
+    if (cleanCep.length !== 8) return;
+    fetch(`https://viacep.com.br/ws/${cleanCep}/json/`)
+      .then(res => res.json())
+      .then(data => {
+        if (!data.erro) {
+          document.getElementById('reg-street').value = data.logradouro;
+          document.getElementById('reg-district').value = data.bairro;
+          document.getElementById('reg-city').value = `${data.localidade} - ${data.uf}`;
+          document.getElementById('reg-number').focus();
+        } else {
+          alert("CEP não encontrado.");
+        }
+      })
+      .catch(() => alert("Erro ao buscar CEP."));
   }
 
+  // --- FUNÇÕES DE MODAL LEGAL ---
+  function openLegalModal(type) {
+    const modal = document.getElementById('legal-modal');
+    const title = document.getElementById('legal-title');
+    const content = document.getElementById('legal-content');
 
-  function checkOpenStatus() {
-    const now = new Date();
-    const day = now.getDay();
-    const hour = now.getHours();
-    let isOpen = false;
+    if (legalTexts[type]) {
+      content.innerHTML = legalTexts[type];
 
-    if (day >= 1 && day <= 5 && hour >= 8 && hour < 18) isOpen = true;
-    else if (day === 6 && hour >= 8 && hour < 16) isOpen = true;
+      if(type === 'trocas') title.textContent = "Trocas e Devoluções";
+      if(type === 'entregas') title.textContent = "Prazos e Entregas";
+      if(type === 'privacidade') title.textContent = "Privacidade e Dados";
+      if(type === 'termos') title.textContent = "Termos de Uso";
 
-    const container = document.getElementById('status-loja-container');
-    if (isOpen) {
-      container.innerHTML = `<div class="flex items-center gap-2"><span class="relative flex h-3 w-3"><span class="animate-ping absolute inline-flex h-full w-full rounded-full
- bg-green-400 opacity-75"></span><span class="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span></span><span class="font-bold text-xs
- uppercase tracking-wider text-green-600">Aberto Agora</span></div>`;
-    } else {
-      container.innerHTML = `<div class="flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-red-500"></span><span class="font-bold
-text-xs uppercase tracking-wider text-red-600">Fechado no momento</span></div>`;
+      modal.classList.remove('hidden');
+      modal.classList.add('flex', 'modal-open');
     }
   }
 
-  function openModal(produtoId) {
-    const produto = storeData.produtos.find(p => p.id === produtoId);
-    if (!produto) return;
-
-    document.getElementById('modal-title').textContent = produto.nome;
-    document.getElementById('modal-price').textContent = produto.preco;
-    document.getElementById('modal-desc').textContent = produto.descricao;
-    document.getElementById('modal-action').href = produto.linkCompra;
-
-    const modalImgContainer = document.getElementById('modal-image-container');
-    modalImgContainer.innerHTML = `<img src="${produto.imagem}" alt="${produto.nome}" class="w-full h-full object-cover">`;
-
-    const tagsContainer = document.getElementById('modal-tags');
-    tagsContainer.innerHTML = '';
-    produto.tags.forEach(tag => {
-      const span = document.createElement('span');
-      span.className = "text-[10px] font-bold uppercase text-txt-muted bg-bg-main px-3 py-1 rounded-lg border border-border-dim";
-      span.textContent = tag;
-      tagsContainer.appendChild(span);
-    });
-
-    const modal = document.getElementById('product-modal');
-    modal.classList.remove('hidden');
-    modal.classList.add('flex', 'modal-open');
-    document.body.style.overflow = 'hidden';
-  }
-
-  function closeModal() {
-    const modal = document.getElementById('product-modal');
+  function closeLegalModal() {
+    const modal = document.getElementById('legal-modal');
     modal.classList.add('hidden');
     modal.classList.remove('flex', 'modal-open');
-    document.body.style.overflow = '';
+  }
+
+  // --- AUTHENTICATION ---
+  function validateStep1() {
+    const nome = document.getElementById('reg-name').value;
+    const sobrenome = document.getElementById('reg-lastname').value;
+    const cpf = document.getElementById('reg-cpf').value;
+    const dob = document.getElementById('reg-dob').value;
+    const phone = document.getElementById('reg-phone').value;
+
+    if (!nome || !sobrenome || !cpf || !dob || !phone) return alert("Preencha todos os campos.");
+    if (!isValidCPF(cpf)) return alert("CPF Inválido.");
+    if (!isOver15(dob)) return alert("Cadastro permitido apenas para maiores de 15 anos.");
+
+    document.getElementById('reg-step-1').classList.add('hidden');
+    document.getElementById('reg-step-2').classList.remove('hidden');
+    updateStepper(2);
+  }
+
+  function validateStep2() {
+    const email = document.getElementById('reg-email').value;
+    const pass = document.getElementById('reg-pass').value;
+    const passConf = document.getElementById('reg-pass-confirm').value;
+
+    if (!email || !pass || !passConf) return alert("Preencha todos os campos.");
+    if (pass !== passConf) return alert("As senhas não coincidem.");
+
+    document.getElementById('reg-step-2').classList.add('hidden');
+    document.getElementById('reg-step-3').classList.remove('hidden');
+    updateStepper(3);
+  }
+
+  function prevStep(targetStep) {
+    document.getElementById('reg-step-1').classList.add('hidden');
+    document.getElementById('reg-step-2').classList.add('hidden');
+    document.getElementById('reg-step-3').classList.add('hidden');
+    document.getElementById(`reg-step-${targetStep}`).classList.remove('hidden');
+    updateStepper(targetStep);
+  }
+
+  function updateStepper(step) {
+    document.getElementById('step-indicator').textContent = `Etapa ${step} de 3`;
+    for(let i=1; i<=3; i++) {
+      const dot = document.getElementById(`dot-${i}`);
+      if (i <= step) { dot.classList.remove('bg-gray-200'); dot.classList.add('bg-brand'); }
+      else { dot.classList.remove('bg-brand'); dot.classList.add('bg-gray-200'); }
+    }
+  }
+
+  function handleProfileClick() {
+    if (!currentUser) openAuthModal(); else openProfileModal();
+  }
+
+  function performLogin() {
+    const email = document.getElementById('login-email').value;
+    const pass = document.getElementById('login-pass').value;
+    if (email && pass) {
+      currentUser = {
+        nome: "Thiago Dias",
+        email: email,
+        cpf: "000.000.000-00",
+        telefone: "(31) 99999-9999",
+        endereco: "Rua Exemplo, 123, Bairro - Cidade/MG"
+      };
+      updateHeaderAuth();
+      closeAuthModal();
+    } else { alert("Preencha os campos."); }
+  }
+
+  function performRegister() {
+    const nome = document.getElementById('reg-name').value + ' ' + document.getElementById('reg-lastname').value;
+    const email = document.getElementById('reg-email').value;
+    const cpf = document.getElementById('reg-cpf').value;
+    const phone = document.getElementById('reg-phone').value;
+    const rua = document.getElementById('reg-street').value;
+    const num = document.getElementById('reg-number').value;
+    const comp = document.getElementById('reg-comp').value;
+    const cidade = document.getElementById('reg-city').value;
+    const enderecoCompleto = `${rua}, ${num} ${comp ? '- '+comp : ''}, ${cidade}`;
+
+    if (!rua || !num) return alert("Endereço incompleto.");
+
+    currentUser = { nome, email, cpf, telefone: phone, endereco: enderecoCompleto };
+    updateHeaderAuth();
+    closeAuthModal();
+    alert("Cadastro realizado com sucesso!");
+  }
+
+  function updateHeaderAuth() {
+    if(currentUser) {
+      document.getElementById('header-username').textContent = currentUser.nome.split(' ')[0];
+      document.querySelector('#auth-display span:nth-child(2)').textContent = "Sua Conta";
+    } else {
+      document.getElementById('header-username').textContent = "Visitante";
+      document.querySelector('#auth-display span:nth-child(2)').textContent = "Entre ou Cadastre-se";
+    }
+  }
+
+  function performLogout() {
+    currentUser = null;
+    updateHeaderAuth();
+    closeProfileModal();
+    alert("Você saiu da conta.");
+  }
+
+  function openAuthModal() { document.getElementById('auth-modal').classList.remove('hidden'); document.getElementById('auth-modal').classList.add('flex', 'modal-open'); }
+  function closeAuthModal() { document.getElementById('auth-modal').classList.add('hidden'); document.getElementById('auth-modal').classList.remove('flex', 'modal-open'); }
+
+  function switchAuthTab(tab) {
+    const btnLogin = document.getElementById('tab-login');
+    const btnReg = document.getElementById('tab-register');
+    const formLogin = document.getElementById('form-login');
+    const formReg = document.getElementById('form-register');
+
+    if (tab === 'login') {
+      btnLogin.classList.add('border-brand', 'text-brand', 'bg-gray-50'); btnLogin.classList.remove('border-transparent', 'text-gray-500');
+      btnReg.classList.remove('border-brand', 'text-brand', 'bg-gray-50'); btnReg.classList.add('border-transparent', 'text-gray-500');
+      formLogin.classList.remove('hidden'); formReg.classList.add('hidden');
+    } else {
+      btnReg.classList.add('border-brand', 'text-brand', 'bg-gray-50'); btnReg.classList.remove('border-transparent', 'text-gray-500');
+      btnLogin.classList.remove('border-brand', 'text-brand', 'bg-gray-50'); btnLogin.classList.add('border-transparent', 'text-gray-500');
+      formReg.classList.remove('hidden'); formLogin.classList.add('hidden');
+      prevStep(1);
+    }
+  }
+
+  function openProfileModal() {
+    document.getElementById('profile-modal').classList.remove('hidden'); document.getElementById('profile-modal').classList.add('flex', 'modal-open');
+    document.getElementById('profile-name-display').textContent = currentUser.nome;
+    document.getElementById('profile-email-display').textContent = currentUser.email;
+    document.getElementById('data-cpf').textContent = currentUser.cpf;
+    document.getElementById('data-phone').textContent = currentUser.telefone;
+    document.getElementById('data-address').textContent = currentUser.endereco;
+    renderOrderHistory(); switchProfileTab('orders');
+  }
+  function closeProfileModal() { document.getElementById('profile-modal').classList.add('hidden'); document.getElementById('profile-modal').classList.remove('flex', 'modal-open'); }
+
+  function switchProfileTab(tab) {
+    const btnOrders = document.getElementById('tab-p-orders');
+    const btnData = document.getElementById('tab-p-data');
+    const divOrders = document.getElementById('profile-orders');
+    const divData = document.getElementById('profile-data');
+
+    if (tab === 'orders') {
+      btnOrders.classList.add('border-brand', 'text-brand', 'bg-gray-50'); btnOrders.classList.remove('border-transparent', 'text-gray-500');
+      btnData.classList.remove('border-brand', 'text-brand', 'bg-gray-50'); btnData.classList.add('border-transparent', 'text-gray-500');
+      divOrders.classList.remove('hidden'); divData.classList.add('hidden');
+    } else {
+      btnData.classList.add('border-brand', 'text-brand', 'bg-gray-50'); btnData.classList.remove('border-transparent', 'text-gray-500');
+      btnOrders.classList.remove('border-brand', 'text-brand', 'bg-gray-50'); btnOrders.classList.add('border-transparent', 'text-gray-500');
+      divData.classList.remove('hidden'); divOrders.classList.add('hidden');
+    }
+  }
+
+  function renderOrderHistory() {
+    const container = document.getElementById('profile-orders'); container.innerHTML = '';
+    if(simulatedOrders.length === 0) { container.innerHTML = '<div class="text-center text-gray-400 py-10">Você ainda não fez pedidos.</div>'; return; }
+    simulatedOrders.forEach(order => {
+      const div = document.createElement('div');
+      div.className = "border border-gray-200 rounded-lg p-4 bg-gray-50";
+      div.innerHTML = `<div class="flex justify-between items-center mb-2"><span class="font-bold text-sm text-txt-main">Pedido #${order.id}</span><span class="text-xs bg-green-100 text-green-700 px-2 py-1 rounded-full font-bold">Solicitado</span></div><p class="text-xs text-gray-500 mb-2">${new Date(order.data).toLocaleDateString()}</p><div class="text-sm">${order.itens.map(i => `<div class="flex justify-between text-gray-600"><span>${i.nome}</span><span>${i.preco}</span></div>`).join('')}</div><div class="border-t border-gray-200 mt-2 pt-2 flex justify-between font-bold text-sm"><span>Total</span><span>${formatPrice(order.total)}</span></div>`;
+      container.appendChild(div);
+    });
+  }
+
+  // --- CARRINHO E CHECKOUT (SIMPLIFICADO PARA WHATSAPP) ---
+  function checkAuthAndAction(action) { if (!currentUser) openAuthModal(); else { if (action === 'cart') openCheckoutModal(); } }
+  function addToCart(product) { cart.push(product); updateCartCounter(); closeModal(); const btn = document.querySelector(`button[onclick="checkAuthAndAction('cart')"]`); btn.classList.add('text-brand'); setTimeout(() => btn.classList.remove('text-brand'), 300); }
+  function removeFromCart(index) { cart.splice(index, 1); renderCartItems(); updateCartCounter(); }
+  function updateCartCounter() { const badge = document.getElementById('cart-count'); badge.textContent = cart.length; if (cart.length > 0) { badge.classList.remove('scale-0'); badge.classList.add('scale-100'); } else { badge.classList.remove('scale-100'); badge.classList.add('scale-0'); } }
+  function getCartTotal() { return cart.reduce((acc, item) => acc + parsePrice(item.preco), 0); }
+  function openCheckoutModal() { if(!currentUser) { openAuthModal(); return; } document.getElementById('checkout-modal').classList.remove('hidden'); document.getElementById('checkout-modal').classList.add('flex', 'modal-open'); renderCartItems(); }
+  function closeCheckoutModal() { document.getElementById('checkout-modal').classList.add('hidden'); document.getElementById('checkout-modal').classList.remove('flex', 'modal-open'); }
+
+  function renderCartItems() {
+    const list = document.getElementById('cart-items-list');
+    list.innerHTML = '';
+    if (cart.length === 0) {
+      list.innerHTML = '<div class="text-center text-gray-400 py-10">Seu carrinho está vazio.</div>';
+      document.getElementById('btn-to-whatsapp').disabled = true;
+      document.getElementById('cart-total-display').textContent = 'R$ 0,00';
+      return;
+    }
+    document.getElementById('btn-to-whatsapp').disabled = false;
+    let total = 0;
+    cart.forEach((item, index) => {
+      total += parsePrice(item.preco);
+      const row = document.createElement('div');
+      row.className = "flex items-center justify-between bg-white p-3 rounded-lg border border-border-dim";
+      row.innerHTML = `<div class="flex items-center gap-3"><div class="w-12 h-12 bg-gray-100 rounded overflow-hidden"><img src="${item.imagem}" class="w-full h-full object-cover"></div><div><h5 class="text-sm font-bold text-txt-main">${item.nome}</h5><span class="text-xs text-brand font-bold">${item.preco}</span></div></div><button onclick="removeFromCart(${index})" class="text-red-400 hover:text-red-600 p-2"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg></button>`;
+      list.appendChild(row);
+    });
+    document.getElementById('cart-total-display').textContent = formatPrice(total);
+  }
+
+  // --- NOVA LÓGICA DE FINALIZAÇÃO NO WHATSAPP ---
+  function finalizePurchaseWhatsApp() {
+    if (cart.length === 0) return;
+
+    let message = "";
+
+    // Verifica singular ou plural
+    if (cart.length === 1) {
+      // Singular
+      message = `Olá! Gostaria de comprar o item:\n\n${cart[0].nome} [${cart[0].id}]\n`;
+    } else {
+      // Plural
+      message = `Olá! Gostaria de comprar os itens:\n\n`;
+      cart.forEach((item, index) => {
+        message += `${index + 1}. ${item.nome} [${item.id}]\n`;
+      });
+    }
+
+    // Adiciona o total ao final (opcional, mas bom para confirmar)
+    const total = formatPrice(getCartTotal());
+    message += `\nTotal Estimado: ${total}`;
+
+    // Cria registro de pedido simulado no histórico do usuário
+    const newOrder = { id: Math.floor(Math.random() * 10000), data: new Date(), itens: [...cart], total: getCartTotal() };
+    simulatedOrders.push(newOrder);
+
+    // Limpa carrinho e abre whatsapp
+    cart = [];
+    updateCartCounter();
+    closeCheckoutModal();
+
+    const url = `https://wa.me/${PHONE_NUMBER}?text=${encodeURIComponent(message)}`;
+    window.open(url, '_blank');
+  }
+
+  // --- POPULAÇÃO DE DADOS ---
+  function generateCatalogData() {
+    Object.keys(catalogCategories).forEach(k => catalogCategories[k] = []);
+
+    const prodsMasculino = [
+      { id: 201, nome: "Camisa Social Branca", preco: "R$ 129,90", imagem: "p1.jpg", descricao: "Clássica e elegante.", tags: ["Social"], linkCompra: "" },
+      { id: 202, nome: "Calça Jeans Slim", preco: "R$ 189,90", imagem: "p2.jpg", descricao: "Conforto e estilo.", tags: ["Casual"], linkCompra: "" },
+      { id: 203, nome: "Jaqueta de Couro", preco: "R$ 399,90", imagem: "p3.jpg", descricao: "Visual moderno.", tags: ["Inverno"], linkCompra: "" },
+      { id: 204, nome: "Bermuda Cargo", preco: "R$ 89,90", imagem: "p1.jpg", descricao: "Praticidade pro dia a dia.", tags: ["Verão"], linkCompra: "" },
+      { id: 205, nome: "Tênis Casual", preco: "R$ 229,90", imagem: "p2.jpg", descricao: "Versátil para qualquer ocasião.", tags: ["Calçados"], linkCompra: "" },
+      { id: 206, nome: "Relógio Esportivo", preco: "R$ 159,90", imagem: "p3.jpg", descricao: "Funcional e resistente.", tags: ["Acessórios"], linkCompra: "" },
+      { id: 207, nome: "Cinto de Couro", preco: "R$ 59,90", imagem: "p1.jpg", descricao: "Acabamento premium.", tags: ["Acessórios"], linkCompra: "" },
+      { id: 208, nome: "Boné Aba Reta", preco: "R$ 49,90", imagem: "p2.jpg", descricao: "Estilo urbano.", tags: ["Acessórios"], linkCompra: "" },
+      { id: 209, nome: "Suéter de Lã", preco: "R$ 149,90", imagem: "p3.jpg", descricao: "Quentinho e confortável.", tags: ["Inverno"], linkCompra: "" }
+    ];
+    prodsMasculino.forEach(p => { catalogCategories["Masculino"].push(p); storeData.produtos.push(p); });
+
+    const prodsFeminino = [
+      { id: 301, nome: "Vestido Floral Longo", preco: "R$ 199,90", imagem: "p1.jpg", descricao: "Leveza e charme.", tags: ["Verão"], linkCompra: "" },
+      { id: 302, nome: "Saia Midi Plissada", preco: "R$ 149,90", imagem: "p2.jpg", descricao: "Elegância pura.", tags: ["Social"], linkCompra: "" },
+      { id: 303, nome: "Blusa de Seda", preco: "R$ 119,90", imagem: "p3.jpg", descricao: "Toque suave.", tags: ["Casual"], linkCompra: "" },
+      { id: 304, nome: "Calça Pantalona", preco: "R$ 179,90", imagem: "p1.jpg", descricao: "Conforto sofisticado.", tags: ["Trabalho"], linkCompra: "" },
+      { id: 305, nome: "Sandália Salto Bloco", preco: "R$ 139,90", imagem: "p2.jpg", descricao: "Estabilidade e beleza.", tags: ["Calçados"], linkCompra: "" },
+      { id: 306, nome: "Macacão Jeans", preco: "R$ 219,90", imagem: "p3.jpg", descricao: "Peça única versátil.", tags: ["Casual"], linkCompra: "" },
+      { id: 307, nome: "Bolsa Tote", preco: "R$ 259,90", imagem: "p1.jpg", descricao: "Espaçosa e chic.", tags: ["Acessórios"], linkCompra: "" },
+      { id: 308, nome: "Colar Delicado", preco: "R$ 45,90", imagem: "p2.jpg", descricao: "Detalhe que faz a diferença.", tags: ["Acessórios"], linkCompra: "" },
+      { id: 309, nome: "Jaqueta Jeans", preco: "R$ 189,90", imagem: "p3.jpg", descricao: "Clássico atemporal.", tags: ["Inverno"], linkCompra: "" }
+    ];
+    prodsFeminino.forEach(p => { catalogCategories["Feminino"].push(p); storeData.produtos.push(p); });
+
+    const prodsAcessorios = [
+      { id: 401, nome: "Óculos de Sol", preco: "R$ 99,90", imagem: "p1.jpg", descricao: "Proteção UV400.", tags: ["Verão"], linkCompra: "" },
+      { id: 402, nome: "Lenço Estampado", preco: "R$ 39,90", imagem: "p2.jpg", descricao: "Toque de cor.", tags: ["Casual"], linkCompra: "" },
+      { id: 403, nome: "Carteira de Couro", preco: "R$ 79,90", imagem: "p3.jpg", descricao: "Durável e compacta.", tags: ["Dia a Dia"], linkCompra: "" },
+      { id: 404, nome: "Brincos de Argola", preco: "R$ 29,90", imagem: "p1.jpg", descricao: "Básico essencial.", tags: ["Jóias"], linkCompra: "" },
+      { id: 405, nome: "Chapéu Panamá", preco: "R$ 69,90", imagem: "p2.jpg", descricao: "Estilo praiano.", tags: ["Verão"], linkCompra: "" },
+      { id: 406, nome: "Mochila Urbana", preco: "R$ 159,90", imagem: "p3.jpg", descricao: "Prática para o dia a dia.", tags: ["Trabalho"], linkCompra: "" },
+      { id: 407, nome: "Pulseira de Prata", preco: "R$ 89,90", imagem: "p1.jpg", descricao: "Brilho discreto.", tags: ["Jóias"], linkCompra: "" },
+      { id: 408, nome: "Cinto Largo", preco: "R$ 55,90", imagem: "p2.jpg", descricao: "Marca a cintura.", tags: ["Moda"], linkCompra: "" },
+      { id: 409, nome: "Tiara de Veludo", preco: "R$ 25,90", imagem: "p3.jpg", descricao: "Tendência vintage.", tags: ["Cabelo"], linkCompra: "" }
+    ];
+    prodsAcessorios.forEach(p => { catalogCategories["Acessórios"].push(p); storeData.produtos.push(p); });
+
+    const prodsInfFem = [
+      { id: 501, nome: "Vestido de Festa", preco: "R$ 110,00", imagem: "p1.jpg", descricao: "Para princesas.", tags: ["Festa"], linkCompra: "" },
+      { id: 502, nome: "Conjunto Moletom", preco: "R$ 95,00", imagem: "p2.jpg", descricao: "Conforto total.", tags: ["Inverno"], linkCompra: "" },
+      { id: 503, nome: "Sapatilha Verniz", preco: "R$ 65,00", imagem: "p3.jpg", descricao: "Brilho nos pés.", tags: ["Calçados"], linkCompra: "" },
+      { id: 504, nome: "Tiara de Flores", preco: "R$ 20,00", imagem: "p1.jpg", descricao: "Delicadeza.", tags: ["Acessórios"], linkCompra: "" },
+      { id: 505, nome: "Shorts Jeans", preco: "R$ 55,00", imagem: "p2.jpg", descricao: "Básico estiloso.", tags: ["Verão"], linkCompra: "" },
+      { id: 506, nome: "Blusa Estampada", preco: "R$ 45,00", imagem: "p3.jpg", descricao: "Alegria nas cores.", tags: ["Dia a Dia"], linkCompra: "" },
+      { id: 507, nome: "Meia Calça Colorida", preco: "R$ 15,00", imagem: "p1.jpg", descricao: "Diversão.", tags: ["Inverno"], linkCompra: "" },
+      { id: 508, nome: "Sandália Gladiadora", preco: "R$ 70,00", imagem: "p2.jpg", descricao: "Moderna.", tags: ["Calçados"], linkCompra: "" },
+      { id: 509, nome: "Bolsinha Tiracolo", preco: "R$ 40,00", imagem: "p3.jpg", descricao: "Igual da mamãe.", tags: ["Acessórios"], linkCompra: "" }
+    ];
+    prodsInfFem.forEach(p => { catalogCategories["Infantil Feminino"].push(p); storeData.produtos.push(p); });
+
+    const prodsInfMasc = [
+      { id: 601, nome: "Camisa Polo", preco: "R$ 60,00", imagem: "p1.jpg", descricao: "Arrumadinho.", tags: ["Passeio"], linkCompra: "" },
+      { id: 602, nome: "Bermuda Sarja", preco: "R$ 75,00", imagem: "p2.jpg", descricao: "Resistente.", tags: ["Dia a Dia"], linkCompra: "" },
+      { id: 603, nome: "Tênis com Luz", preco: "R$ 90,00", imagem: "p3.jpg", descricao: "Diversão garantida.", tags: ["Calçados"], linkCompra: "" },
+      { id: 604, nome: "Boné Personagem", preco: "R$ 35,00", imagem: "p1.jpg", descricao: "Seu herói favorito.", tags: ["Acessórios"], linkCompra: "" },
+      { id: 605, nome: "Conjunto Verão", preco: "R$ 55,00", imagem: "p2.jpg", descricao: "Fresco e leve.", tags: ["Verão"], linkCompra: "" },
+      { id: 606, nome: "Jaqueta Bomber", preco: "R$ 110,00", imagem: "p3.jpg", descricao: "Estiloso no frio.", tags: ["Inverno"], linkCompra: "" },
+      { id: 607, nome: "Calça Jogger", preco: "R$ 80,00", imagem: "p1.jpg", descricao: "Conforto para brincar.", tags: ["Dia a Dia"], linkCompra: "" },
+      { id: 608, nome: "Pijama Algodão", preco: "R$ 50,00", imagem: "p2.jpg", descricao: "Bons sonhos.", tags: ["Noite"], linkCompra: "" },
+      { id: 609, nome: "Mochila Escolar", preco: "R$ 120,00", imagem: "p3.jpg", descricao: "Volta às aulas.", tags: ["Acessórios"], linkCompra: "" }
+    ];
+    prodsInfMasc.forEach(p => { catalogCategories["Infantil Masculino"].push(p); storeData.produtos.push(p); });
   }
 
   document.addEventListener('DOMContentLoaded', () => {
     generateCatalogData();
     renderTabs();
-
     checkOpenStatus();
     setInterval(checkOpenStatus, 60000);
 
     document.getElementById('hero-name').textContent = storeData.nome;
     document.getElementById('hero-role').textContent = storeData.slogan;
     document.getElementById('hero-bio').innerHTML = storeData.descricao;
+    document.getElementById('location-display').innerHTML = `<svg class="w-5 h-4 rounded-sm shadow-sm" viewBox="0 0 700 500"><rect width="700" height="500" fill="#009b3a"/><path d="M350 55l305 195-305 195L45 250z" fill="#fedf00"/><circle cx="350" cy="250" r="105" fill="#002776"/><path d="M256 270c29-30 68-42 122-30" stroke="#fff" stroke-width="12" fill="none"/></svg> <span>${storeData.localizacao}</span>`;
 
-    // Bandeira do Brasil SVG inline
-    const flagSvg = `<svg class="w-5 h-4 rounded-sm shadow-sm" viewBox="0 0 700 500" xmlns="http://www.w3.org/2000/svg"><rect width="700" height="500" fill="#009b3a"/><path d="M350 55l305 195-305 195L45 250z" fill="#fedf00"/><circle cx="350" cy="250" r="105" fill="#002776"/><path d="M256 270c29-30 68-42 122-30" stroke="#fff" stroke-width="12" fill="none"/></svg>`;
+    if (storeData.fotoUrl) document.getElementById('foto-container').innerHTML = `<img src="${storeData.fotoUrl}" class="w-full h-full object-contain">`;
 
-    document.getElementById('location-display').innerHTML = `${flagSvg} <span>${storeData.localizacao}</span>`;
-
-    if (storeData.fotoUrl) {
-      document.getElementById('foto-container').innerHTML = `<img src="${storeData.fotoUrl}" alt="${storeData.nome}" class="w-full h-full object-contain">`;
-    }
-
+    // GERA CATEGORIAS COM O ESTILO DA IMAGEM
     const catContainer = document.getElementById('categories-list');
     storeData.categorias.forEach(cat => {
-      const badge = document.createElement('span');
-      badge.className = "px-4 py-2 text-xs font-bold border border-border-dim bg-white text-brand hover:bg-brand hover:text-white transition-all rounded-full cursor-default shadow-sm";
-      badge.textContent = cat;
-      catContainer.appendChild(badge);
+      const b = document.createElement('span');
+      b.className = "cat-pill px-6 py-3 text-sm font-bold border border-border-dim bg-white text-brand rounded-full shadow-sm cursor-default inline-block";
+      b.textContent = cat;
+      catContainer.appendChild(b);
     });
 
     const prodContainer = document.getElementById('products-grid');
-    storeData.produtos.filter(p => p.id < 100).forEach(prod => {
-      const card = document.createElement('div');
-      card.className = "group cursor-pointer bg-bg-card border border-border-dim p-6 hover:border-brand/50 hover:shadow-xl hover:-translate-y-1 " +
-        "transition-all duration-300 h-full flex flex-col justify-between rounded-3xl relative overflow-hidden";
-      card.onclick = () => openModal(prod.id);
-
-      card.innerHTML = `
-        <div class="relative z-10 w-full">
-            <div class="h-56 w-full bg-gray-50 rounded-2xl mb-5 overflow-hidden border border-border-dim/50">
-               <img src="${prod.imagem}" alt="${prod.nome}" class="w-full h-full object-cover hover:scale-105 transition-transform duration-500">
-            </div>
-
-            <div class="flex justify-between items-start mb-4">
-                <h3 class="text-xl font-serif font-bold text-txt-main group-hover:text-brand transition-colors">${prod.nome}</h3>
-                <span class="text-sm font-bold bg-brand/10 text-brand px-2 py-1 rounded-md h-fit whitespace-nowrap">${prod.preco}</span>
-            </div>
-            <p class="text-txt-muted text-sm leading-relaxed mb-6 line-clamp-3">${prod.descricao}</p>
-        </div>
-        <div class="relative z-10 flex gap-2 flex-wrap mt-auto">
-            ${prod.tags.map(tag => `<span class="text-[10px] font-bold uppercase text-txt-muted bg-bg-main px-3 py-1 rounded-lg border border-border-dim">${tag}</span>`).join('')}
-        </div>
-        <div class="absolute inset-0 bg-white/90 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center z-20">
-            <span class="text-brand font-bold uppercase tracking-widest border border-brand px-6 py-2 rounded-full shadow-lg bg-white">Ver Detalhes</span>
-        </div>
-      `;
-      prodContainer.appendChild(card);
-    });
+    storeData.produtos.filter(p => p.id < 100).forEach(prod => { prodContainer.appendChild(createProductCard(prod)); });
 
     const difContainer = document.getElementById('features-list');
-    storeData.diferenciais.forEach(item => {
-      const row = document.createElement('div');
-      row.className = "grid grid-cols-1 md:grid-cols-4 gap-4 py-8 border-b border-border-dim last:border-0 hover:bg-white transition-all px-4 rounded-xl";
-      row.innerHTML = `<div class="md:col-span-1 text-xs font-bold text-brand uppercase pt-1 tracking-wider">${item.titulo}</div><div class="md:col-span-3"><h4 class="text-lg font-bold text-txt-main mb-1">${item.subtitulo}</h4><p class="text-sm text-txt-muted max-w-xl leading-relaxed">${item.detalhe}</p></div>`;
-      difContainer.appendChild(row);
-    });
+    storeData.diferenciais.forEach(item => { const r = document.createElement('div'); r.className = "grid grid-cols-1 md:grid-cols-4 gap-4 py-8 border-b border-border-dim last:border-0 hover:bg-white transition-all px-4 rounded-xl"; r.innerHTML = `<div class="md:col-span-1 text-xs font-bold text-brand uppercase pt-1 tracking-wider">${item.titulo}</div><div class="md:col-span-3"><h4 class="text-lg font-bold text-txt-main mb-1">${item.subtitulo}</h4><p class="text-sm text-txt-muted max-w-xl leading-relaxed">${item.detalhe}</p></div>`; difContainer.appendChild(r); });
 
     const contactContainer = document.getElementById('contact-links');
-    const socialLinks = [
-      { name: "Instagram", url: storeData.contato.instagram, icon: "📸" },
-      { name: "WhatsApp", url: storeData.contato.whatsapp, icon: "💬" }
-    ];
-    socialLinks.forEach(link => {
-      if(!link.url) return;
-      const btn = document.createElement('a');
-      btn.href = link.url;
-      btn.target = "_blank";
-      btn.className = "flex items-center gap-2 text-sm font-bold bg-white text-brand px-8 py-4 hover:bg-brand-dark hover:text-white " +
-        "hover:scale-105 transition-all duration-300 min-w-[160px] justify-center rounded-full shadow-lg border border-brand/10";
-      btn.innerHTML = `<span>${link.icon}</span> ${link.name}`;
-      contactContainer.appendChild(btn);
-    });
+    if(contactContainer) {
+      const links = [
+        {name:"Instagram", url:storeData.contato.instagram, icon:"📸"},
+        {name:"WhatsApp", url:storeData.contato.whatsapp, icon:"💬"}
+      ];
+      links.forEach(l => {
+        if(!l.url) return;
+        const b = document.createElement('a');
+        b.href = l.url;
+        b.target = "_blank";
+        b.className = "flex items-center gap-2 text-sm font-bold bg-white text-brand px-8 py-4 hover:bg-brand-dark hover:text-white hover:scale-105 transition-all duration-300 min-w-[160px] justify-center rounded-full shadow-lg border border-brand/10";
+        b.innerHTML = `<span>${l.icon}</span> ${l.name}`;
+        contactContainer.appendChild(b);
+      });
+    }
 
     document.getElementById('footer-year').textContent = new Date().getFullYear();
   });
+
+  function renderTabs() {
+    const tabContainer = document.getElementById('tab-container');
+    Object.keys(catalogCategories).forEach((cat, index) => {
+      const btn = document.createElement('button');
+      btn.className = `px-5 py-2 rounded-full text-sm font-bold border transition-all duration-300 hover:shadow-md ${index===0?'tab-active':'tab-inactive'}`;
+      btn.textContent = cat; btn.onclick = () => switchTab(cat, btn); tabContainer.appendChild(btn);
+    });
+    renderCatalogGrid(Object.keys(catalogCategories)[0]);
+  }
+  function switchTab(cat, btn) {
+    Array.from(document.getElementById('tab-container').children).forEach(b=>{b.classList.remove('tab-active');b.classList.add('tab-inactive');});
+    btn.classList.remove('tab-inactive'); btn.classList.add('tab-active');
+    renderCatalogGrid(cat);
+  }
+  function renderCatalogGrid(cat) {
+    const grid = document.getElementById('catalog-grid');
+    grid.classList.add('opacity-0', 'translate-y-4');
+    setTimeout(() => { grid.innerHTML = ''; catalogCategories[cat].forEach(p => grid.appendChild(createProductCard(p))); grid.classList.remove('opacity-0', 'translate-y-4'); }, 300);
+  }
+  function createProductCard(prod) {
+    const card = document.createElement('div');
+    card.className = "bg-white p-4 rounded-2xl border border-border-dim hover:shadow-lg transition-all cursor-pointer group flex flex-col";
+    card.onclick = () => openModal(prod.id);
+    card.innerHTML = `<div class="h-40 bg-gray-50 rounded-xl overflow-hidden mb-3 relative"><img src="${prod.imagem}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"><div class="absolute bottom-2 right-2 bg-white/90 backdrop-blur px-2 py-1 rounded text-xs font-bold text-brand shadow-sm">${prod.preco}</div></div><h4 class="font-bold text-txt-main text-sm mb-1">${prod.nome}</h4><p class="text-xs text-txt-muted line-clamp-2">${prod.descricao}</p>`;
+    return card;
+  }
+  function openModal(id) {
+    const p = storeData.produtos.find(i => i.id === id); if(!p)return;
+    document.getElementById('modal-title').textContent = p.nome; document.getElementById('modal-price').textContent = p.preco; document.getElementById('modal-desc').textContent = p.descricao;
+    document.getElementById('modal-image-container').innerHTML = `<img src="${p.imagem}" class="w-full h-full object-cover">`;
+    const tc = document.getElementById('modal-tags'); tc.innerHTML = ''; p.tags.forEach(t=>{const s=document.createElement('span');s.className="text-[10px] font-bold uppercase text-txt-muted bg-bg-main px-3 py-1 rounded-lg border border-border-dim";s.textContent=t;tc.appendChild(s);});
+    document.getElementById('add-to-cart-btn').onclick = () => addToCart(p);
+
+    // Atualiza o link do botão whatsapp direto do modal (caso usuário queira comprar só 1 item)
+    const urlWa = `https://wa.me/${PHONE_NUMBER}?text=Olá! Gostaria de comprar o item: ${p.nome} [${p.id}]`;
+    document.getElementById('modal-action-whatsapp').href = urlWa;
+
+    const m = document.getElementById('product-modal'); m.classList.remove('hidden'); m.classList.add('flex', 'modal-open');
+  }
+  function closeModal() { document.getElementById('product-modal').classList.add('hidden'); document.getElementById('product-modal').classList.remove('flex', 'modal-open'); }
+
+  function checkOpenStatus() {
+    const now = new Date();
+    const day = now.getDay();
+    const hour = now.getHours();
+    let isOpen = false;
+    if (day >= 1 && day <= 5 && hour >= 8 && hour < 18) isOpen = true;
+    else if (day === 6 && hour >= 8 && hour < 16) isOpen = true;
+
+    const container = document.getElementById('status-loja-container');
+    if (isOpen) {
+      container.innerHTML = `<div class="flex items-center gap-2"><span class="relative flex h-3 w-3"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span><span class="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span></span><span class="font-bold text-xs uppercase tracking-wider text-green-600">Aberto Agora</span></div>`;
+    } else {
+      container.innerHTML = `<div class="flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-red-500"></span><span class="font-bold text-xs uppercase tracking-wider text-red-600">Fechado no momento</span></div>`;
+    }
+  }
 </script>
 </body>
 </html>

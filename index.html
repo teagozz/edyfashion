@@ -1,0 +1,954 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="scroll-smooth">
+<head>
+  <head>
+    <link rel="icon" href="logo.jpg" type="image/jpeg">
+    <link rel="shortcut icon" href="logo.jpg" type="image/jpeg">
+
+  </head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Edy Fashion</title>
+  <meta name="description" content="Edy Fashion - Inovando a cada estação! Moda Masculina, Feminina e Infantil em Coronel Murta - MG.">
+  <meta property="og:title" content="Edy Fashion">
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            serif: ['Playfair Display', 'serif'],
+          },
+          colors: {
+            brand: '#ea580c',
+            'brand-dark': '#c2410c',
+            'brand-light': '#fff7ed',
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    .product-card:hover .product-img { transform: scale(1.05); }
+
+    .hero-container:hover .hero-img { transform: scale(1.05); }
+
+    .glass-nav { background: rgba(255, 255, 255, 0.98); backdrop-filter: blur(10px); }
+
+    @keyframes pulse-ring {
+      0% { transform: scale(0.33); opacity: 1; }
+      80%, 100% { transform: scale(2); opacity: 0; }
+    }
+    .pulsing-circle { position: relative; display: block; width: 10px; height: 10px; border-radius: 50%; background-color: #22c55e; flex-shrink: 0; }
+    .pulsing-circle:before { content: ''; position: absolute; display: block; width: 300%; height: 300%; box-sizing: border-box; margin-left: -100%; margin-top: -100%; border-radius: 50%; background-color: #22c55e; animation: pulse-ring 1.25s cubic-bezier(0.215, 0.61, 0.355, 1) infinite; opacity: 0.6; }
+
+    .pulsing-circle-red { position: relative; display: block; width: 10px; height: 10px; border-radius: 50%; background-color: #ef4444; flex-shrink: 0; }
+    .pulsing-circle-red:before { content: ''; position: absolute; display: block; width: 300%; height: 300%; box-sizing: border-box; margin-left: -100%; margin-top: -100%; border-radius: 50%; background-color: #ef4444; animation: pulse-ring 1.25s cubic-bezier(0.215, 0.61, 0.355, 1) infinite; opacity: 0.6; }
+
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+    .modal-anim { animation: modalIn 0.2s ease-out forwards; }
+    @keyframes modalIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+
+    section { scroll-margin-top: 100px; }
+
+    .size-option:checked + label { background-color: #ea580c; color: white; border-color: #ea580c; }
+
+    .auth-input { width: 100%; background-color: #f9fafb; border: 1px solid #e5e7eb; padding: 0.75rem 1rem; border-radius: 0.75rem; outline: none; transition: all 0.2s; font-size: 0.875rem; }
+    .auth-input:focus { border-color: #ea580c; background-color: #fff; box-shadow: 0 0 0 4px rgba(234, 88, 12, 0.1); }
+  </style>
+</head>
+<body class="bg-white text-gray-800 antialiased flex flex-col min-h-screen">
+
+<div id="cookie-banner" class="fixed bottom-0 left-0 w-full bg-white border-t border-gray-200 p-4 shadow-2xl z-[150] hidden flex-col md:flex-row items-center justify-between gap-4">
+  <div class="text-sm text-gray-600 max-w-3xl">
+    <p><strong>Sua privacidade importa.</strong> Utilizamos armazenamento local para melhorar sua experiência. Ao continuar, você concorda com nossos <button onclick="openLegalModal('termos')" class="text-brand underline">Termos de Uso</button>.</p>
+  </div>
+  <button onclick="acceptCookies()" class="bg-brand text-white px-6 py-2 rounded-lg font-bold hover:bg-brand-dark transition-colors whitespace-nowrap">Aceitar</button>
+</div>
+
+<header class="fixed top-0 w-full z-50 glass-nav border-b border-gray-100 shadow-sm transition-all duration-300">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex justify-between items-center h-20">
+      <a href="#" class="flex-shrink-0 flex items-center gap-2 group">
+        <h1 class="text-3xl font-serif font-bold text-brand tracking-tight">Edy Fashion</h1>
+      </a>
+
+      <nav class="hidden md:flex gap-8">
+        <a href="#inicio" class="text-sm font-medium hover:text-brand transition-colors">Início</a>
+        <a href="#destaques" class="text-sm font-medium hover:text-brand transition-colors">Novidades</a>
+        <a href="#produtos" class="text-sm font-medium hover:text-brand transition-colors">Produtos</a>
+        <a href="#contato" class="text-sm font-medium hover:text-brand transition-colors">Contato</a>
+      </nav>
+
+      <div class="flex items-center gap-4">
+        <button onclick="openCart()" class="relative p-2 text-gray-600 hover:text-brand transition-colors group" aria-label="Abrir Carrinho">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+          </svg>
+          <span id="cart-count" class="absolute top-0 right-0 bg-brand text-white text-[10px] font-bold h-4 w-4 rounded-full flex items-center justify-center transform scale-0 transition-transform duration-200">0</span>
+        </button>
+
+        <button onclick="checkProfile()" class="p-2 text-gray-600 hover:text-brand transition-colors flex items-center gap-1" title="Minha Conta">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+          </svg>
+          <span id="nav-user-name" class="text-xs font-bold hidden sm:block">Entrar</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main class="flex-grow pt-20">
+
+  <section id="inicio" class="relative bg-brand-light py-16 md:py-24 overflow-hidden">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+      <div class="relative z-10">
+        <h2 class="text-4xl md:text-6xl font-serif font-bold text-gray-900 mt-2 mb-6 leading-tight">
+          Inovando a <br><span class="text-brand">cada estação!</span>
+        </h2>
+
+        <p class="text-gray-600 text-lg mb-8 max-w-lg">
+            Na Edy Fashion, acreditamos que a moda é uma forma de expressão!<br> Aqui nós trabalhamos com peças selecionadas que unem conforto, tendência e elegância..
+        </p>
+        <div class="flex flex-wrap gap-4">
+          <a href="#produtos" class="bg-brand text-white px-8 py-3 rounded-full font-bold hover:bg-brand-dark transition shadow-lg shadow-brand/30">Ver Produtos</a>
+        </div>
+
+        <div class="mt-8 pt-6 border-t border-orange-100">
+          <div class="text-sm text-gray-700 flex items-start gap-2 font-medium mb-3">
+            <svg class="w-5 h-5 text-brand flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+            <span>Av. José Ferreira Freire Murta, 168, Coronel Murta - MG</span>
+          </div>
+
+          <div id="status-loja-wrapper" class="flex items-center mt-4 ml-7">
+            <div id="status-loja"></div>
+          </div>
+
+          <div class="text-xs text-gray-500 mt-2 ml-7">Seg-Sex: 8h-18h | Sáb: 8h-16h</div>
+        </div>
+      </div>
+
+      <div class="relative hidden md:block">
+        <div class="absolute top-0 right-0 -mr-20 -mt-20 w-80 h-80 bg-orange-200 rounded-full blur-3xl opacity-50"></div>
+        <div class="relative rounded-3xl overflow-hidden shadow-2xl rotate-2 hover:rotate-0 transition-transform duration-500 border-4 border-white h-[500px] bg-gray-100 flex items-center justify-center hero-container">
+          <img src="logo.jpg" alt="Banner Principal" class="w-full h-full object-cover transition-transform duration-700 hero-img">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="destaques" class="py-16 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between mb-10">
+        <div>
+          <h2 class="text-3xl font-serif font-bold text-gray-900">Novidades</h2>
+          <div class="w-12 h-1 bg-brand mt-2"></div>
+        </div>
+        <span class="text-xs font-bold text-orange-400 uppercase tracking-wider hidden sm:block">| SELECIONADOS DA SEMANA</span>
+      </div>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-6" id="grid-destaques"></div>
+    </div>
+  </section>
+
+  <section id="produtos" class="py-16 bg-gray-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex flex-col md:flex-row justify-between items-end mb-8 gap-4">
+        <div>
+          <h2 class="text-3xl font-serif font-bold text-gray-900">Nossa Vitrine</h2>
+          <p class="text-gray-500 mt-2 text-sm">Navegue pelas categorias exclusivas.</p>
+        </div>
+        <div class="flex overflow-x-auto gap-2 pb-2 no-scrollbar w-full md:w-auto">
+          <button onclick="filtrar('todos')" class="filter-btn active bg-brand text-white px-6 py-2 rounded-full text-sm font-bold shadow-md transition-all whitespace-nowrap">Todos</button>
+          <button onclick="filtrar('masculino')" class="filter-btn bg-white text-gray-600 hover:text-brand px-6 py-2 rounded-full text-sm font-bold border border-gray-200 transition-all whitespace-nowrap">Masculino</button>
+          <button onclick="filtrar('feminino')" class="filter-btn bg-white text-gray-600 hover:text-brand px-6 py-2 rounded-full text-sm font-bold border border-gray-200 transition-all whitespace-nowrap">Feminino</button>
+          <button onclick="filtrar('infantil')" class="filter-btn bg-white text-gray-600 hover:text-brand px-6 py-2 rounded-full text-sm font-bold border border-gray-200 transition-all whitespace-nowrap">Infantil</button>
+          <button onclick="filtrar('acessorios')" class="filter-btn bg-white text-gray-600 hover:text-brand px-6 py-2 rounded-full text-sm font-bold border border-gray-200 transition-all whitespace-nowrap">Acessórios</button>
+        </div>
+      </div>
+
+      <div class="relative mb-8">
+        <input type="text" id="search-input" placeholder="Buscar por nome, cor, estilo..." class="w-full p-4 pl-12 rounded-xl border border-gray-200 focus:outline-none focus:border-brand transition-all text-sm bg-white">
+        <svg class="w-5 h-5 absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+      </div>
+
+      <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 min-h-[400px]" id="grid-produtos"></div>
+    </div>
+  </section>
+
+  <section id="diferenciais" class="py-20 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex flex-col md:flex-row justify-between items-baseline mb-16 border-b border-gray-100 pb-4">
+        <h2 class="text-4xl font-serif font-bold text-gray-900">Por que escolher a Edy?</h2>
+        <span class="text-xs font-bold text-brand uppercase tracking-wider mt-2 md:mt-0">| Nossa Essência</span>
+      </div>
+
+      <div class="space-y-12">
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-4">
+          <div class="md:col-span-3 text-brand font-bold text-xs uppercase tracking-wider">Atendimento Personalizado</div>
+          <div class="md:col-span-9">
+            <h3 class="text-xl font-bold text-gray-900 mb-2">Consultoria de moda</h3>
+            <p class="text-gray-600 text-sm">Ajudamos você a escolher o look perfeito, seja presencialmente ou pelo atendimento online!</p>
+          </div>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-4 border-t border-gray-100 pt-12">
+          <div class="md:col-span-3 text-brand font-bold text-xs uppercase tracking-wider">Qualidade Premium</div>
+          <div class="md:col-span-9">
+            <h3 class="text-xl font-bold text-gray-900 mb-2">Curadoria Exclusiva</h3>
+            <p class="text-gray-600 text-sm">Peças selecionadas com material de alta qualidade e conforto.</p>
+          </div>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-4 border-t border-gray-100 pt-12">
+          <div class="md:col-span-3 text-brand font-bold text-xs uppercase tracking-wider">Compra Segura</div>
+          <div class="md:col-span-9">
+            <h3 class="text-xl font-bold text-gray-900 mb-2">Proteção de Dados</h3>
+            <p class="text-gray-600 text-sm">Seguimos rigorosamente a LGPD para sua segurança.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="contato" class="bg-brand py-20 text-white relative overflow-hidden">
+    <div class="absolute inset-0 bg-[radial-gradient(#ffffff33_1px,transparent_1px)] [background-size:16px_16px]"></div>
+    <div class="max-w-4xl mx-auto px-4 text-center relative z-10">
+      <h2 class="text-3xl md:text-5xl font-serif font-bold mb-6">Fale Conosco</h2>
+      <p class="mb-8 text-orange-100 max-w-lg mx-auto">Tire suas dúvidas, faça pedidos ou acompanhe os lançamentos exclusivos.</p>
+      <div class="flex flex-col sm:flex-row justify-center gap-4">
+        <a href="https://wa.me/553384539635?text=Ol%C3%A1%2C%20vim%20pelo%20site%20da%20Edy%20Fashion%20e%20gostaria%20de%20atendimento." target="_blank" class="inline-flex items-center justify-center gap-3 bg-white text-brand px-10 py-4 rounded-2xl font-bold text-lg hover:scale-105 transition shadow-2xl">
+          <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.206-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+          Whatsapp
+        </a>
+        <a href="https://instagram.com/edyfashion__" target="_blank" class="inline-flex items-center justify-center gap-3 bg-white text-brand px-10 py-4 rounded-2xl font-bold text-lg hover:scale-105 transition shadow-2xl">
+          <span>Instagram</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="bg-gray-100 border-t border-gray-200 pt-16 pb-8 text-sm text-gray-600">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-12 mb-12">
+      <div>
+        <h4 class="font-serif font-bold text-gray-900 text-lg mb-4">Edy Fashion</h4>
+        <p class="mb-2 font-medium text-gray-500">CNPJ: 08.616.647/0001-54</p>
+        <p class="leading-relaxed">
+          Avenida José Ferreira Freire Murta, 168, Centro<br>
+          Coronel Murta - MG
+        </p>
+      </div>
+      <div>
+        <h5 class="font-bold text-gray-900 uppercase tracking-wider mb-4 text-xs">Ajuda & Entregas</h5>
+        <ul class="space-y-3">
+          <li><button onclick="openLegal('trocas')" class="hover:text-brand transition text-left">Trocas e Devoluções</button></li>
+          <li><button onclick="openLegal('prazos')" class="hover:text-brand transition text-left">Prazos e Envios</button></li>
+          <li><a href="https://wa.me/553384539635" target="_blank" class="hover:text-brand transition">Falar no WhatsApp</a></li>
+        </ul>
+      </div>
+      <div>
+        <h5 class="font-bold text-gray-900 uppercase tracking-wider mb-4 text-xs">Jurídico & Privacidade</h5>
+        <ul class="space-y-3">
+          <li><button onclick="openLegal('privacidade')" class="hover:text-brand transition flex items-center gap-2 group">
+            <svg class="w-3 h-3 text-gray-400 group-hover:text-brand" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+            Política de Privacidade (LGPD)
+          </button></li>
+          <li><button onclick="openLegal('termos')" class="hover:text-brand transition text-left">Termos de Uso</button></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="border-t border-gray-200 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+      <div class="text-xs text-gray-500">
+        &copy; 2025 <strong class="text-brand">Edy Fashion</strong>. Todos os direitos reservados.
+      </div>
+      <div class="flex flex-col items-end gap-1">
+        <div class="text-xs flex items-center gap-1">
+          <span>Desenvolvido por</span>
+          <a href="https://github.com/teagozz" target="_blank" class="font-bold text-gray-800 hover:text-brand transition">@diasjthiago</a>
+        </div>
+        <div class="flex gap-4 mt-1">
+          <a href="https://www.linkedin.com/in/thiagodjardim/" target="_blank" class="flex items-center gap-1 text-[10px] uppercase font-bold text-gray-400 hover:text-[#0077b5] transition">
+            <svg class="w-3 h-3 fill-current" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg> LinkedIn
+          </a>
+          <a href="mailto:forbusinessthiago@gmail.com" class="flex items-center gap-1 text-[10px] uppercase font-bold text-gray-400 hover:text-red-500 transition">
+            <svg class="w-3 h-3 fill-current" viewBox="0 0 24 24"><path d="M0 3v18h24v-18h-24zm21.518 2l-9.518 7.713-9.518-7.713h19.036zm-19.518 14v-11.817l10 8.104 10-8.104v11.817h-20z"/></svg> Email
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<div id="modal-produto" class="fixed inset-0 z-[60] hidden transition-all duration-300 opacity-0">
+  <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" onclick="closeModal('modal-produto')"></div>
+  <div class="absolute bottom-0 md:top-1/2 md:left-1/2 md:transform md:-translate-x-1/2 md:-translate-y-1/2 bg-white w-full md:w-[800px] md:rounded-2xl rounded-t-2xl shadow-2xl overflow-hidden flex flex-col md:flex-row max-h-[90vh]">
+    <div class="w-full md:w-1/2 bg-gray-100 relative h-64 md:h-auto flex items-center justify-center">
+      <img id="mp-img" src="" class="w-full h-full object-cover">
+    </div>
+    <div class="w-full md:w-1/2 p-8 flex flex-col overflow-y-auto">
+      <button onclick="closeModal('modal-produto')" class="absolute top-4 right-4 bg-gray-100 rounded-full p-2 hover:bg-gray-200 z-10">✕</button>
+      <span id="mp-tag" class="text-xs font-bold text-brand uppercase tracking-wider mb-2"></span>
+      <h3 id="mp-nome" class="text-2xl font-serif font-bold text-gray-900 mb-2"></h3>
+      <span id="mp-preco" class="text-xl font-bold text-brand mb-4 block"></span>
+      <p id="mp-desc" class="text-gray-600 mb-6 text-sm leading-relaxed"></p>
+
+      <div class="mb-6">
+        <label class="block text-xs font-bold uppercase mb-2 text-gray-500">Tamanho</label>
+        <div class="flex gap-2 flex-wrap" id="mp-sizes"></div>
+      </div>
+
+      <button onclick="addToCart()" class="w-full bg-brand text-white py-4 rounded-xl font-bold hover:bg-brand-dark transition mt-auto shadow-lg shadow-brand/20">Adicionar à Sacola</button>
+    </div>
+  </div>
+</div>
+
+<div id="modal-carrinho" class="fixed inset-0 z-[70] hidden justify-end">
+  <div class="absolute inset-0 bg-black/50 backdrop-blur-sm transition-opacity" onclick="closeModal('modal-carrinho')"></div>
+  <div class="relative bg-white w-full max-w-md h-full shadow-2xl flex flex-col transform transition-transform duration-300 translate-x-full" id="carrinho-content">
+    <div class="p-6 border-b border-gray-100 flex justify-between items-center bg-gray-50">
+      <h3 class="text-xl font-serif font-bold">Sua Sacola</h3>
+      <button onclick="closeModal('modal-carrinho')" class="text-gray-500 hover:text-black">✕</button>
+    </div>
+    <div id="cart-items" class="flex-grow overflow-y-auto p-6 space-y-4"></div>
+    <div class="p-6 border-t border-gray-100 bg-gray-50">
+      <div class="flex justify-between font-bold text-lg mb-4">
+        <span>Total Estimado</span>
+        <span id="cart-total" class="text-brand">R$ 0,00</span>
+      </div>
+      <button onclick="checkout()" class="w-full bg-green-500 text-white py-4 rounded-xl font-bold hover:bg-green-600 transition flex justify-center items-center gap-2 shadow-lg shadow-green-500/20">
+        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+        Enviar Pedido no WhatsApp
+      </button>
+    </div>
+  </div>
+</div>
+
+<div id="modal-auth" class="fixed inset-0 z-[80] hidden items-center justify-center p-4">
+  <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" onclick="closeModal('modal-auth')"></div>
+  <div class="bg-white w-full max-w-md rounded-2xl shadow-2xl relative z-10 overflow-hidden" id="auth-box">
+
+    <div class="flex border-b border-gray-100">
+      <button onclick="switchAuthTab('login')" id="tab-login" class="flex-1 py-4 text-sm font-bold text-center border-b-2 border-brand text-brand bg-white hover:bg-gray-50 transition">Entrar</button>
+      <button onclick="switchAuthTab('register')" id="tab-register" class="flex-1 py-4 text-sm font-bold text-center border-b-2 border-transparent text-gray-400 hover:text-brand transition">Criar Conta</button>
+    </div>
+
+    <div class="p-8">
+
+      <div id="form-login">
+        <h3 class="text-2xl font-serif font-bold mb-6 text-gray-900">Bem-vindo de volta</h3>
+        <input type="email" id="login-email" class="auth-input mb-4" placeholder="Seu email">
+        <input type="password" id="login-pass" class="auth-input mb-6" placeholder="Sua senha">
+        <button onclick="performLogin()" class="w-full bg-brand text-white py-3 rounded-xl font-bold hover:bg-brand-dark transition shadow-lg shadow-brand/20">Entrar</button>
+        <p id="login-error" class="text-red-500 text-xs mt-3 text-center hidden font-bold"></p>
+      </div>
+
+      <div id="form-register" class="hidden">
+
+        <div class="flex justify-between mb-6">
+          <div class="h-1 flex-1 bg-brand rounded-full mx-1" id="prog-1"></div>
+          <div class="h-1 flex-1 bg-gray-200 rounded-full mx-1" id="prog-2"></div>
+          <div class="h-1 flex-1 bg-gray-200 rounded-full mx-1" id="prog-3"></div>
+        </div>
+
+        <div id="reg-step-1">
+          <h4 class="font-bold text-gray-800 mb-4">Dados Pessoais</h4>
+          <input type="text" id="reg-nome" class="auth-input mb-3" placeholder="Nome">
+          <input type="text" id="reg-sobrenome" class="auth-input mb-3" placeholder="Sobrenome">
+          <input type="text" id="reg-cpf" class="auth-input mb-3" placeholder="CPF" maxlength="14" oninput="maskCPF(this)">
+          <label class="text-xs text-gray-500 ml-1 block mb-1">Data de Nascimento</label>
+          <input type="date" id="reg-nasc" class="auth-input mb-4">
+          <button onclick="nextStep(1)" class="w-full bg-brand text-white py-3 rounded-xl font-bold hover:bg-brand-dark transition">Próximo</button>
+        </div>
+
+        <div id="reg-step-2" class="hidden">
+          <h4 class="font-bold text-gray-800 mb-4">Acesso</h4>
+          <input type="email" id="reg-email" class="auth-input mb-3" placeholder="Email">
+          <input type="password" id="reg-pass" class="auth-input mb-3" placeholder="Senha">
+          <input type="password" id="reg-pass-confirm" class="auth-input mb-4" placeholder="Confirmar Senha">
+          <div class="flex gap-2">
+            <button onclick="prevStep(2)" class="w-1/3 border border-gray-300 text-gray-600 py-3 rounded-xl font-bold hover:bg-gray-50">Voltar</button>
+            <button onclick="nextStep(2)" class="w-2/3 bg-brand text-white py-3 rounded-xl font-bold hover:bg-brand-dark transition">Próximo</button>
+          </div>
+        </div>
+
+        <div id="reg-step-3" class="hidden">
+          <h4 class="font-bold text-gray-800 mb-4">Endereço</h4>
+          <div class="flex gap-2 mb-3">
+            <input type="text" id="reg-cep" class="auth-input w-2/3" placeholder="CEP" onblur="buscaCep(this.value)">
+            <button onclick="buscaCep(document.getElementById('reg-cep').value)" class="w-1/3 bg-gray-100 text-xs font-bold rounded-lg hover:bg-gray-200 border border-gray-200">Buscar</button>
+          </div>
+          <input type="text" id="reg-rua" class="auth-input mb-3" placeholder="Rua">
+          <div class="flex gap-2 mb-3">
+            <input type="text" id="reg-num" class="auth-input w-1/3" placeholder="Nº">
+            <input type="text" id="reg-comp" class="auth-input w-2/3" placeholder="Complemento">
+          </div>
+          <input type="text" id="reg-cidade" class="auth-input mb-4 bg-gray-50" placeholder="Cidade" readonly>
+
+          <div class="flex items-start gap-2 mb-4">
+            <input type="checkbox" id="reg-lgpd-check" class="mt-1 accent-brand">
+            <label for="reg-lgpd-check" class="text-xs text-gray-500 leading-tight">Li e concordo com a <a href="#" onclick="openLegalModal('privacidade')" class="underline text-brand">Política de Privacidade</a> e autorizo o uso dos meus dados.</label>
+          </div>
+
+          <div class="flex gap-2">
+            <button onclick="prevStep(3)" class="w-1/3 border border-gray-300 text-gray-600 py-3 rounded-xl font-bold hover:bg-gray-50">Voltar</button>
+            <button onclick="finishRegister()" class="w-2/3 bg-green-600 text-white py-3 rounded-xl font-bold hover:bg-green-700 transition shadow-lg shadow-green-600/20">Finalizar</button>
+          </div>
+        </div>
+
+      </div>
+      <p id="auth-error" class="text-red-500 text-xs mt-3 text-center hidden font-bold"></p>
+    </div>
+  </div>
+</div>
+
+<div id="modal-profile" class="fixed inset-0 z-[85] hidden items-center justify-center p-4">
+  <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" onclick="closeModal('modal-profile')"></div>
+  <div class="bg-white w-full max-w-2xl rounded-2xl shadow-2xl relative z-10 overflow-hidden flex flex-col max-h-[85vh]">
+
+    <div class="bg-brand p-6 text-white flex justify-between items-center shrink-0">
+      <div>
+        <h3 class="text-xl font-bold" id="profile-name-display">Minha Conta</h3>
+        <p class="text-sm opacity-90" id="profile-email-display"></p>
+      </div>
+      <button onclick="doLogout()" class="bg-white/20 hover:bg-white/30 px-4 py-2 rounded text-xs font-bold transition">SAIR</button>
+    </div>
+
+    <div class="flex border-b shrink-0">
+      <button onclick="switchProfileTab('dados')" id="tab-dados" class="flex-1 py-4 text-center font-bold text-brand border-b-2 border-brand bg-gray-50">Meus Dados</button>
+      <button onclick="switchProfileTab('pedidos')" id="tab-pedidos" class="flex-1 py-4 text-center font-bold text-gray-500 hover:text-brand transition">Meus Pedidos</button>
+    </div>
+
+    <div class="p-6 overflow-y-auto bg-gray-50 flex-grow">
+
+      <div id="content-dados" class="space-y-4">
+        <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100">
+          <label class="text-xs font-bold text-gray-400 block mb-1">CPF</label>
+          <p id="profile-cpf" class="font-medium text-gray-800"></p>
+        </div>
+        <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100">
+          <label class="text-xs font-bold text-gray-400 block mb-1">ENDEREÇO</label>
+          <p id="profile-address" class="font-medium text-gray-800"></p>
+        </div>
+        <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100">
+          <label class="text-xs font-bold text-gray-400 block mb-1">NASCIMENTO</label>
+          <p id="profile-dob" class="font-medium text-gray-800"></p>
+        </div>
+      </div>
+
+      <div id="content-pedidos" class="hidden space-y-4">
+        <div id="orders-list"></div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div id="modal-legal" class="fixed inset-0 z-[90] hidden items-center justify-center p-4">
+  <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" onclick="closeModal('modal-legal')"></div>
+  <div class="bg-white w-full max-w-2xl rounded-2xl shadow-2xl relative z-10 p-8 max-h-[80vh] overflow-y-auto">
+    <button onclick="closeModal('modal-legal')" class="absolute top-4 right-4 text-gray-400 hover:text-black">✕</button>
+    <h3 id="legal-title" class="text-2xl font-serif font-bold mb-4"></h3>
+    <div id="legal-content" class="text-sm text-gray-600 space-y-4 leading-relaxed"></div>
+  </div>
+</div>
+
+<script>
+  const WHATSAPP_NUM = "553384539635";
+  let cart = JSON.parse(localStorage.getItem('edy_cart')) || [];
+  let user = JSON.parse(localStorage.getItem('edy_user')) || null;
+  let orders = JSON.parse(localStorage.getItem('edy_orders')) || [];
+  let products = [];
+  let currentCategory = 'todos';
+  let selectedProduct = null;
+  let selectedSize = null;
+  let tempUser = {};
+
+  const categorias = [
+    { id: 'masculino', prefix: 'M', nome: 'Masculino' },
+    { id: 'feminino', prefix: 'F', nome: 'Feminino' },
+    { id: 'infantil', prefix: 'I', nome: 'Infantil' },
+    { id: 'acessorios', prefix: 'A', nome: 'Acessórios' }
+  ];
+
+  function initProducts() {
+    let idCount = 1;
+    categorias.forEach(cat => {
+      for(let i=1; i<=9; i++) {
+        products.push({
+          id: idCount++,
+          nome: `${cat.nome} Style ${i}`,
+          preco: (Math.random() * (250 - 50) + 50).toFixed(2).replace('.',','),
+          rawPrice: (Math.random() * (250 - 50) + 50),
+          img: `img/${cat.prefix}${i}.jpg`,
+          cat: cat.id,
+          desc: `Peça exclusiva da coleção ${cat.nome}.`,
+          tags: ['Novo', cat.nome]
+        });
+      }
+    });
+  }
+
+  window.onload = () => {
+    initProducts();
+    renderProducts();
+    renderHighlights();
+    updateCartCount();
+    checkProfileButton();
+    checkOpenStatus();
+    checkCookieConsent();
+    setInterval(checkOpenStatus, 60000);
+    document.addEventListener('keydown', (e) => { if(e.key === 'Escape') closeAllModals(); });
+  };
+
+  function renderProducts() {
+    const grid = document.getElementById('grid-produtos');
+    grid.innerHTML = '';
+    const filtered = currentCategory === 'todos' ? products : products.filter(p => p.cat === currentCategory);
+    filtered.forEach(p => grid.innerHTML += createCardHTML(p));
+  }
+
+  function renderHighlights() {
+    const grid = document.getElementById('grid-destaques');
+    const highlights = [];
+    categorias.forEach(cat => {
+      highlights.push(...products.filter(p => p.cat === cat.id).slice(0, 2));
+    });
+    highlights.forEach(p => grid.innerHTML += createCardHTML(p));
+  }
+
+  function createCardHTML(p) {
+    return `
+          <div class="product-card bg-white rounded-2xl border border-gray-100 overflow-hidden cursor-pointer group shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col h-full" onclick="openProductModal(${p.id})">
+              <div class="h-80 overflow-hidden relative bg-gray-100 flex items-center justify-center">
+                  <img src="${p.img}" onerror="this.src='https://placehold.co/600x800/orange/white?text=${p.nome}'" class="product-img w-full h-full object-cover transition-transform duration-700">
+              </div>
+              <div class="p-4 flex flex-col flex-grow">
+                  <h4 class="font-bold text-gray-900 truncate text-lg">${p.nome}</h4>
+                  <p class="text-xs text-gray-500 mb-2">${p.desc}</p>
+                  <div class="mt-auto flex justify-between items-center">
+                      <span class="text-brand font-bold text-lg">R$ ${p.preco}</span>
+                      <span class="text-xs bg-gray-100 px-2 py-1 rounded text-gray-600">${p.tags[1]}</span>
+                  </div>
+              </div>
+          </div>
+      `;
+  }
+
+  function filtrar(cat) {
+    currentCategory = cat;
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+      const isActive = btn.textContent.toLowerCase() === cat || (cat === 'todos' && btn.textContent === 'Todos');
+      btn.className = isActive
+        ? "filter-btn active bg-brand text-white px-6 py-2 rounded-full text-sm font-bold shadow-md transition-all whitespace-nowrap scale-105"
+        : "filter-btn bg-white text-gray-600 hover:text-brand px-6 py-2 rounded-full text-sm font-bold border border-gray-200 transition-all whitespace-nowrap";
+    });
+    renderProducts();
+  }
+
+  function checkOpenStatus() {
+    const now = new Date();
+    const day = now.getDay();
+    const hour = now.getHours();
+
+    let isOpen = false;
+    if (day >= 1 && day <= 5 && hour >= 8 && hour < 18) isOpen = true;
+    else if (day === 6 && hour >= 8 && hour < 16) isOpen = true;
+
+    const container = document.getElementById('status-loja');
+
+    container.className = "flex items-center";
+    container.innerHTML = isOpen
+      ? `<div class="pulsing-circle mr-2"></div><span class="text-green-600 uppercase tracking-wider font-bold">Aberto Agora</span>`
+      : `<div class="pulsing-circle-red mr-2"></div><span class="text-red-600 uppercase tracking-wider font-bold">Fechado Agora</span>`;
+
+    const wrapper = document.getElementById('status-loja-wrapper');
+    wrapper.className = isOpen
+      ? "inline-flex items-center gap-2 text-xs font-bold border px-3 py-1 rounded-full transition-colors duration-500 bg-green-50 border-green-200 ml-7 mt-4"
+      : "inline-flex items-center gap-2 text-xs font-bold border px-3 py-1 rounded-full transition-colors duration-500 bg-red-50 border-red-200 ml-7 mt-4";
+  }
+
+  function nextStep(current) {
+    const err = document.getElementById('auth-error');
+    err.classList.add('hidden');
+
+    if(current === 1) {
+      const nome = document.getElementById('reg-nome').value;
+      const cpf = document.getElementById('reg-cpf').value;
+      const nasc = document.getElementById('reg-nasc').value;
+
+      if(!nome || cpf.length < 14 || !nasc) { showError("Preencha todos os campos corretamente."); return; }
+
+      const dob = new Date(nasc);
+      const year = dob.getFullYear();
+      const today = new Date();
+      const currentYear = today.getFullYear();
+
+      if(year.toString().length !== 4 || year < 1900 || year > currentYear) {
+        showError("Ano de nascimento inválido."); return;
+      }
+
+      let age = currentYear - year;
+      const m = today.getMonth() - dob.getMonth();
+      if (m < 0 || (m === 0 && today.getDate() < dob.getDate())) age--;
+
+      if(age < 15) { showError("Cadastro permitido apenas para maiores de 15 anos."); return; }
+      if(age > 100) { showError("Idade máxima excedida."); return; }
+
+      tempUser.nome = nome + " " + document.getElementById('reg-sobrenome').value;
+      tempUser.cpf = cpf;
+      tempUser.nasc = nasc;
+    }
+
+    if(current === 2) {
+      const email = document.getElementById('reg-email').value;
+      const pass = document.getElementById('reg-pass').value;
+      const conf = document.getElementById('reg-pass-confirm').value;
+
+      if(!email || !pass) { showError("Preencha email e senha."); return; }
+      if(pass !== conf) { showError("Senhas não conferem."); return; }
+
+      tempUser.email = email;
+    }
+
+    document.getElementById(`reg-step-${current}`).classList.add('hidden');
+    document.getElementById(`reg-step-${current+1}`).classList.remove('hidden');
+
+    document.getElementById(`prog-${current}`).classList.remove('bg-brand');
+    document.getElementById(`prog-${current}`).classList.add('bg-green-500');
+    document.getElementById(`prog-${current+1}`).classList.remove('bg-gray-200');
+    document.getElementById(`prog-${current+1}`).classList.add('bg-brand');
+  }
+
+  function prevStep(current) {
+    document.getElementById(`reg-step-${current}`).classList.add('hidden');
+    document.getElementById(`reg-step-${current-1}`).classList.remove('hidden');
+    document.getElementById('auth-error').classList.add('hidden');
+
+    document.getElementById(`prog-${current-1}`).classList.remove('bg-green-500');
+    document.getElementById(`prog-${current-1}`).classList.add('bg-brand');
+    document.getElementById(`prog-${current}`).classList.remove('bg-brand');
+    document.getElementById(`prog-${current}`).classList.add('bg-gray-200');
+  }
+
+  async function buscaCep(cep) {
+    cep = cep.replace(/\D/g, '');
+    if(cep.length !== 8) return;
+    try {
+      const res = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
+      const data = await res.json();
+      if(!data.erro) {
+        document.getElementById('reg-rua').value = data.logradouro;
+        document.getElementById('reg-cidade').value = `${data.localidade} - ${data.uf}`;
+        document.getElementById('reg-num').focus();
+      } else {
+        showError("CEP não encontrado.");
+      }
+    } catch(e) { console.error(e); }
+  }
+
+  function finishRegister() {
+    const rua = document.getElementById('reg-rua').value;
+    const num = document.getElementById('reg-num').value;
+    const cid = document.getElementById('reg-cidade').value;
+    const lgpd = document.getElementById('reg-lgpd-check').checked;
+
+    if(!rua || !num || !cid) { showError("Preencha o endereço completo."); return; }
+    if(!lgpd) { showError("Você precisa concordar com a Política de Privacidade."); return; }
+
+    tempUser.endereco = `${rua}, ${num} - ${document.getElementById('reg-comp').value}, ${cid}`;
+
+    user = tempUser;
+    localStorage.setItem('edy_user', JSON.stringify(user));
+    closeModal('modal-auth');
+    checkProfileButton();
+    if(cart.length > 0) openCart();
+  }
+
+  function showError(msg) {
+    const el = document.getElementById('auth-error');
+    el.innerText = msg;
+    el.classList.remove('hidden');
+  }
+
+  function maskCPF(i) {
+    i.value = i.value.replace(/\D/g,"").replace(/(\d{3})(\d)/,"$1.$2").replace(/(\d{3})(\d)/,"$1.$2").replace(/(\d{3})(\d{1,2})$/,"$1-$2");
+  }
+
+  function openProductModal(id) {
+    selectedProduct = products.find(p => p.id === id);
+    document.getElementById('mp-img').src = selectedProduct.img;
+    document.getElementById('mp-img').onerror = function() { this.src='https://placehold.co/600x800/orange/white?text='+selectedProduct.nome; }
+    document.getElementById('mp-nome').innerText = selectedProduct.nome;
+    document.getElementById('mp-preco').innerText = "R$ " + selectedProduct.preco;
+    document.getElementById('mp-desc').innerText = selectedProduct.desc;
+    document.getElementById('mp-tag').innerText = selectedProduct.tags[1];
+
+    const sc = document.getElementById('mp-sizes');
+    sc.innerHTML = '';
+
+    let sizes = ['P','M','G','GG'];
+
+    const isFootwear = selectedProduct.tags.some(t => t.toLowerCase().includes('calçados') || t.toLowerCase().includes('tênis') || t.toLowerCase().includes('sandália'));
+    const isChild = selectedProduct.cat === 'infantil';
+    const isMale = selectedProduct.cat === 'masculino';
+    const isFemale = selectedProduct.cat === 'feminino';
+
+    if (isFootwear && !isChild) {
+      if (isMale) sizes = ['37','38','39','40','41','42','43','44'];
+      else if (isFemale) sizes = ['34','35','36','37','38','39'];
+    }
+
+    sizes.forEach(s => {
+      const btn = document.createElement('button');
+      btn.innerText = s;
+      btn.className = "w-10 h-10 border border-gray-300 rounded hover:border-brand hover:text-brand transition focus:bg-brand focus:text-white";
+      btn.onclick = (e) => { selectedSize = s; Array.from(sc.children).forEach(c=>c.classList.remove('bg-brand','text-white')); e.target.classList.add('bg-brand','text-white'); }
+      sc.appendChild(btn);
+    });
+    openModal('modal-produto');
+  }
+
+  function addToCart() {
+    if(!selectedSize) { alert("Por favor, selecione um tamanho para continuar."); return; }
+    const exist = cart.find(i => i.id === selectedProduct.id && i.size === selectedSize);
+    if(exist) {
+      if(exist.qty < 5) exist.qty++;
+      else alert("Máximo 5 itens iguais.");
+    } else {
+      cart.push({...selectedProduct, size: selectedSize, qty: 1});
+    }
+    updateCartCount();
+    closeModal('modal-produto');
+  }
+
+  function updateCartCount() {
+    const count = cart.reduce((a,b)=>a+b.qty,0);
+    const b = document.getElementById('cart-count');
+    b.innerText = count;
+    b.classList.toggle('scale-0', count===0);
+    localStorage.setItem('edy_cart', JSON.stringify(cart));
+  }
+
+  function updateQty(idx, delta) {
+    const item = cart[idx];
+    const newQty = item.qty + delta;
+    if(newQty >= 1 && newQty <= 5) {
+      item.qty = newQty;
+      updateCartCount();
+      openCart();
+    }
+  }
+
+  function openCart() {
+    if(!user) { openModal('modal-auth'); return; }
+    const c = document.getElementById('cart-items');
+    c.innerHTML = '';
+    let total = 0;
+    cart.forEach((i, idx) => {
+      total += i.rawPrice * i.qty;
+      c.innerHTML += `
+              <div class="flex gap-4 border-b pb-4">
+                  <img src="${i.img}" class="w-16 h-16 object-cover rounded" onerror="this.src='https://placehold.co/100'">
+                  <div class="flex-1">
+                      <h5 class="font-bold text-sm">${i.nome}</h5>
+                      <p class="text-xs text-gray-500">Tam: ${i.size} | ${i.preco}</p>
+                      <div class="flex items-center mt-2 gap-3">
+                         <button onclick="updateQty(${idx}, -1)" class="w-6 h-6 bg-gray-200 rounded text-xs font-bold">-</button>
+                         <span class="text-sm font-bold">${i.qty}</span>
+                         <button onclick="updateQty(${idx}, 1)" class="w-6 h-6 bg-gray-200 rounded text-xs font-bold">+</button>
+                      </div>
+                  </div>
+                  <div class="flex flex-col items-end justify-between">
+                     <span class="text-brand font-bold text-sm">R$ ${(i.rawPrice * i.qty).toFixed(2).replace('.',',')}</span>
+                     <button onclick="cart.splice(${idx},1);updateCartCount();openCart()" class="text-red-400 text-xs">Remover</button>
+                  </div>
+              </div>`;
+    });
+    document.getElementById('cart-total').innerText = total.toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
+    const m = document.getElementById('modal-carrinho');
+    m.classList.remove('hidden');
+    m.classList.add('flex');
+    setTimeout(() => document.getElementById('carrinho-content').classList.remove('translate-x-full'), 10);
+  }
+
+  function checkout() {
+    if(cart.length === 0) return;
+    let msg = `Olá! Sou *${user.nome}* (CPF: ${user.cpf}).\nGostaria de reservar:\n\n`;
+    let total = 0;
+    cart.forEach(i => { msg += `- ${i.qty}x ${i.nome} (${i.size}) \n`; total += i.rawPrice*i.qty; });
+    msg += `\n*Total: ${total.toLocaleString('pt-BR',{style:'currency',currency:'BRL'})}*`;
+    msg += `\n\n📍 Endereço de Entrega: ${user.endereco}`;
+
+    orders.push({ id: Date.now(), date: new Date().toLocaleDateString(), total: total.toLocaleString('pt-BR',{style:'currency',currency:'BRL'}), items: [...cart] });
+    localStorage.setItem('edy_orders', JSON.stringify(orders));
+
+    window.open(`https://wa.me/${WHATSAPP_NUM}?text=${encodeURIComponent(msg)}`, '_blank');
+    cart=[]; updateCartCount(); closeAllModals();
+  }
+
+  function openModal(id) {
+    const m = document.getElementById(id);
+    const box = m.querySelector('div[id="auth-box"]') || m.querySelector('div[class*="rounded-2xl"]');
+    m.classList.remove('hidden'); m.classList.add('flex');
+    setTimeout(() => { m.classList.remove('opacity-0'); if(box) { box.classList.remove('scale-95','opacity-0'); box.classList.add('scale-100','opacity-100'); }}, 10);
+  }
+  function closeModal(id) {
+    const m = document.getElementById(id);
+    if(id === 'modal-carrinho') document.getElementById('carrinho-content').classList.add('translate-x-full');
+    else m.classList.add('opacity-0');
+    setTimeout(() => { m.classList.add('hidden'); m.classList.remove('flex'); }, 300);
+  }
+  function closeAllModals() { ['modal-produto','modal-carrinho','modal-auth','modal-legal','modal-profile'].forEach(closeModal); }
+
+  function checkProfile() {
+    if(user) {
+      document.getElementById('profile-name-display').innerText = user.nome;
+      document.getElementById('profile-email-display').innerText = user.email;
+
+      document.getElementById('profile-cpf').innerText = user.cpf;
+      document.getElementById('profile-address').innerText = user.endereco;
+      document.getElementById('profile-dob').innerText = new Date(user.nasc).toLocaleDateString('pt-BR');
+
+      renderOrderHistory();
+      openModal('modal-profile');
+    } else {
+      openModal('modal-auth');
+    }
+  }
+
+  function checkProfileButton() {
+    const span = document.getElementById('nav-user-name');
+    if(user) span.innerText = user.nome.split(' ')[0];
+    else span.innerText = 'Entrar';
+  }
+
+  function renderOrderHistory() {
+    const list = document.getElementById('orders-list');
+    list.innerHTML = '';
+    if(orders.length === 0) list.innerHTML = '<p class="text-center text-gray-400 py-4">Nenhum pedido realizado.</p>';
+
+    orders.slice().reverse().forEach(o => {
+      list.innerHTML += `
+             <div class="bg-white p-4 rounded-xl border border-gray-100 shadow-sm">
+                 <div class="flex justify-between items-center mb-2">
+                     <span class="font-bold text-sm">Pedido #${o.id.toString().substr(-6)}</span>
+                     <span class="text-xs bg-green-100 text-green-700 px-2 py-1 rounded">${o.date}</span>
+                 </div>
+                 <div class="text-xs text-gray-500 mb-2">${o.items.length} itens</div>
+                 <div class="font-bold text-brand text-right">${o.total}</div>
+             </div>
+          `;
+    });
+  }
+
+  function switchProfileTab(tab) {
+    document.getElementById('tab-dados').className = tab==='dados' ? 'flex-1 py-4 text-center font-bold text-brand border-b-2 border-brand bg-gray-50' : 'flex-1 py-4 text-center font-bold text-gray-500 hover:text-brand transition';
+    document.getElementById('tab-pedidos').className = tab==='pedidos' ? 'flex-1 py-4 text-center font-bold text-brand border-b-2 border-brand bg-gray-50' : 'flex-1 py-4 text-center font-bold text-gray-500 hover:text-brand transition';
+
+    document.getElementById('content-dados').className = tab==='dados' ? 'space-y-4 animate-fade-in' : 'hidden';
+    document.getElementById('content-pedidos').className = tab==='pedidos' ? 'space-y-4 animate-fade-in' : 'hidden';
+  }
+
+  function doLogout() {
+    localStorage.removeItem('edy_user');
+    user = null;
+    checkProfileButton();
+    location.reload();
+  }
+
+  function acceptCookies() {
+    localStorage.setItem('edy_cookies', 'true');
+    document.getElementById('cookie-banner').classList.add('hidden');
+  }
+
+  function checkCookieConsent() {
+    if(!localStorage.getItem('edy_cookies')) {
+      document.getElementById('cookie-banner').classList.remove('hidden');
+      document.getElementById('cookie-banner').classList.add('flex');
+    }
+  }
+
+  function openLegal(t) {
+    const c = {
+      trocas: "<p><strong>Política de Trocas e Devoluções:</strong><br><br>Em conformidade com o Código de Defesa do Consumidor, garantimos o seu direito à troca em caso de defeito de fabricação. O cliente deve comunicar a loja e realizar a devolução do item o mais rápido possível para que possamos iniciar o processo de análise e substituição junto ao fabricante. O produto deve, obrigatoriamente, conter todas as etiquetas intactas e sua embalagem original.</p>",
+      prazos: "<p><strong>Prazos e Entregas:</strong><br><br>A postagem dos produtos é realizada no mesmo dia da confirmação do pedido, caso os Correios ainda estejam em horário de funcionamento. Caso contrário, o envio será efetuado no primeiro horário do dia útil subsequente. Após a postagem, enviaremos o código de rastreamento oficial dos Correios via WhatsApp para que você possa acompanhar a entrega. O prazo final de recebimento é de responsabilidade exclusiva dos Correios.</p>",
+      privacidade: "<p><strong>Política de Privacidade (LGPD):</strong><br><br>A Edy Fashion respeita sua privacidade. Coletamos apenas os dados estritamente necessários (Nome, CPF, Endereço e Contato) para processar seu pedido e viabilizar a entrega. Garantimos que suas informações são armazenadas em ambiente seguro e jamais serão comercializadas ou cedidas a terceiros sem seu consentimento explícito. Você possui o direito de solicitar a visualização, correção ou exclusão definitiva dos seus dados de nossa base a qualquer momento, bastando entrar em contato com nosso suporte.</p>",
+      termos: "<p><strong>Termos de Uso:</strong><br><br>Ao utilizar este site, você concorda que ele funciona como uma vitrine virtual para reserva de produtos. A disponibilidade dos itens pode variar e a compra só é considerada efetivada após a confirmação do pagamento diretamente com o atendente via WhatsApp. Reservamo-nos o direito de alterar preços e estoques sem aviso prévio. As imagens dos produtos são ilustrativas.</p>"
+    };
+
+    const titles = { trocas: "Trocas e Devoluções", prazos: "Prazos e Envios", privacidade: "Política de Privacidade", termos: "Termos de Uso" };
+
+    document.getElementById('legal-title').innerText = titles[t];
+    document.getElementById('legal-content').innerHTML = c[t];
+    openModal('modal-legal');
+  }
+
+  function switchAuthTab(t) {
+    const loginBtn = document.getElementById('tab-login');
+    const regBtn = document.getElementById('tab-register');
+    const loginForm = document.getElementById('form-login');
+    const regForm = document.getElementById('form-register');
+    const errorMsg = document.getElementById('login-error');
+    errorMsg.classList.add('hidden');
+
+    if(t === 'login') {
+      loginBtn.className = "flex-1 py-4 text-sm font-bold text-center border-b-2 border-brand text-brand bg-white hover:bg-gray-50 transition";
+      regBtn.className = "flex-1 py-4 text-sm font-bold text-center border-b-2 border-transparent text-gray-400 hover:text-brand transition";
+      loginForm.classList.remove('hidden');
+      regForm.classList.add('hidden');
+    } else {
+      regBtn.className = "flex-1 py-4 text-sm font-bold text-center border-b-2 border-brand text-brand bg-white hover:bg-gray-50 transition";
+      loginBtn.className = "flex-1 py-4 text-sm font-bold text-center border-b-2 border-transparent text-gray-400 hover:text-brand transition";
+      regForm.classList.remove('hidden');
+      loginForm.classList.add('hidden');
+    }
+  }
+
+  function performLogin() {
+    const email = document.getElementById('login-email').value;
+    const pass = document.getElementById('login-pass').value;
+    const errorMsg = document.getElementById('login-error');
+
+    if(!email || !pass) {
+      errorMsg.innerText = "Preencha todos os campos.";
+      errorMsg.classList.remove('hidden');
+      return;
+    }
+
+    const saved = localStorage.getItem('edy_user');
+    if(saved) {
+      const u = JSON.parse(saved);
+      if(u.email === email) {
+        user = u;
+        updateUIState();
+        closeModal('modal-auth');
+        const ord = localStorage.getItem('edy_orders');
+        if(ord) orders = JSON.parse(ord);
+      } else {
+        errorMsg.innerText = "Dados incorretos ou usuário não cadastrado.";
+        errorMsg.classList.remove('hidden');
+      }
+    } else {
+      errorMsg.innerText = "Nenhuma conta encontrada. Cadastre-se na aba ao lado.";
+      errorMsg.classList.remove('hidden');
+    }
+  }
+
+  function updateUIState() {
+    checkProfileButton();
+    if(user && cart.length > 0 && document.getElementById('modal-auth').classList.contains('flex')) {
+      openCart();
+    }
+  }
+</script>
+</body>
+</html>
